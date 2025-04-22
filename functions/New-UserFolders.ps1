@@ -19,6 +19,7 @@ function New-UserFolders {
 
     [CmdletBinding()]
     param (
+        [ValidateNotNullOrEmpty()]
         [string[]]$Folders = @("Workspace", "Workspace\Temp", "Coding")
     )
 
@@ -36,7 +37,6 @@ function New-UserFolders {
         Add-ToQuickAccess -FolderPath $path
     }
 }
-Export-ModuleMember -Function New-UserFolders
 
 function Add-Shortcut {
     <#

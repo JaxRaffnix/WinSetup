@@ -1,0 +1,64 @@
+function Set-Git {
+    <#
+    .SYNOPSIS
+    Configures Git with a global user name and email.
+
+    .DESCRIPTION
+    Runs `git config --global` to set your name and email for all repositories. 
+    Also sets some default Git configurations for convenience.
+
+    .PARAMETER UserName
+    The name to associate with commits.
+    Defaults to 'Jax Raffnix'.
+
+    .PARAMETER UserEmail
+    The email address to associate with commits.
+    Defaults to '75493600+JaxRaffnix@users.noreply.github.com'.
+
+    .EXAMPLE
+    Set-Git -UserName "Alice" -UserEmail "alice@example.com"
+    #>
+
+    [CmdletBinding()]
+    param (
+        [ValidateNotNullOrEmpty()]
+        [string]$UserName = 'Jax Raffnix',
+
+        [ValidateNotNullOrEmpty()]
+        [string]$UserEmail = '75493600+JaxRaffnix@users.noreply.github.com'
+    )
+
+    # Check if Git is installed
+    if (-not (Get-Command git -ErrorAction SilentlyContinue)) {
+        Write-Error "Git is not installed or not available in the PATH. Please install Git and try again."
+        return
+    }
+
+    try {
+        # Check if user configurations already exist
+        $existingUserName = git config --global user.name
+        $existingUserEmail = git config --global user.email
+
+        if ($existingUserName -eq $UserName -and $existingUserEmail -eq $UserEmail) {
+            Write-Host "Git is already configured with the same user name and email. Skipping configuration."
+        } else {
+            # Set default Git configurations
+            git config --global init.defaultBranch main
+            git config --global credential.helper manager
+            git config --global color.ui auto
+            git config --global core.autocrlf true
+            git config --global pull.rebase false
+
+            # Set user-specific configurations
+            git config --global user.name $UserName
+            git config --global user.email $UserEmail
+
+            Write-Host "Git has been successfully configured with the following settings:"
+            Write-Host "User Name: $UserName"
+            Write-Host "User Email: $UserEmail"
+        }
+    }
+    catch {
+        Write-Error "An error occurred while configuring Git: $_"
+    }
+}

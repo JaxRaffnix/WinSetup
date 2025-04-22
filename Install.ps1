@@ -13,6 +13,12 @@ $TargetPath = Join-Path -Path "$HOME\Documents\PowerShell\Modules" -ChildPath $M
 
 Write-Host "Installing module '$ModuleName' to '$TargetPath'..."
 
+# Remove the existing module folder if it exists
+if (Test-Path $TargetPath) {
+    Write-Host "Removing existing module at '$TargetPath'..."
+    Remove-Item -Path $TargetPath -Recurse -Force
+}
+
 # Create target path if it doesn't exist
 if (-not (Test-Path $TargetPath)) {
     New-Item -ItemType Directory -Path $TargetPath -Force | Out-Null
