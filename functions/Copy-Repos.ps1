@@ -19,18 +19,16 @@ function Copy-Repos {
 
     [CmdletBinding()]
     param (
+        [Parameter(Mandatory)]
         [ValidateNotNullOrEmpty()]
-        [string[]]$RepoUrls = @("https://github.com/JaxRaffnix/Hilfestellung.git", "https://github.com/JaxRaffnix/Backup-Manager.git", "https://github.com/JaxRaffnix/WinSetup.git"),
+        [string[]]$RepoUrls,
 
+        [Parameter(Mandatory)]
         [ValidateNotNullOrEmpty()]
-        [string]$TargetFolder = "C:\Users\Jax\Coding"
+        [string]$TargetFolder
     )
 
-    # Check if Git is installed
-    if (-not (Get-Command git -ErrorAction SilentlyContinue)) {
-        Write-Error "Git is not installed or not available in the PATH. Please install Git and try again."
-        return
-    }
+    Test-CommandExists -App 'git'
 
     # Create the target folder if it doesn't exist
     if (-not (Test-Path $TargetFolder)) {

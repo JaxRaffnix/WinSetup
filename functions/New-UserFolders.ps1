@@ -11,7 +11,6 @@ function New-UserFolders {
 
     .PARAMETER Folders
     List of folder paths (relative to $env:USERPROFILE).
-    Default is @("Workspace", "Workspace\Temp", "Coding").
 
     .EXAMPLE
     New-UserFolders -Folders @("Workspace", "Workspace\Temp", "Coding")
@@ -19,22 +18,27 @@ function New-UserFolders {
 
     [CmdletBinding()]
     param (
+        [Parameter(Mandatory)]
         [ValidateNotNullOrEmpty()]
-        [string[]]$Folders = @("Workspace", "Workspace\Temp", "Coding")
+        [string[]]$Folders
     )
 
     foreach ($folder in $Folders) {
         $path = Join-Path -Path $env:USERPROFILE -ChildPath $folder
 
-        if (-not (Test-Path $path)) {
+        try {
+            if (-not (Test-Path $path)) {
             New-Item -ItemType Directory -Path $path -Force | Out-Null
             Write-Host "Created folder: $path"
-        } else {
-            Write-Host "Folder already exists: $path"
+            } else {
+            Write-Warning "Folder already exists: $path"
+            }
+        } catch {
+            Write-Error "Failed to create folder '$path': $($_.Exception.Message)"
         }
 
         Add-Shortcut -TargetPath $path
-        Add-ToQuickAccess -FolderPath $path
+        Switch-ToQuickAccess -FolderPath $path
     }
 }
 
@@ -59,19 +63,23 @@ function Add-Shortcut {
         [string]$TargetPath
     )
 
-    $desktop = [Environment]::GetFolderPath("Desktop")
-    $shortcutName = "$([System.IO.Path]::GetFileName($TargetPath)).lnk"
-    $shortcutPath = Join-Path $desktop $shortcutName
+    try {
+        $desktop = [Environment]::GetFolderPath("Desktop")
+        $shortcutName = "$([System.IO.Path]::GetFileName($TargetPath)).lnk"
+        $shortcutPath = Join-Path $desktop $shortcutName
 
-    $shell = New-Object -ComObject WScript.Shell
-    $shortcut = $shell.CreateShortcut($shortcutPath)
-    $shortcut.TargetPath = $TargetPath
-    $shortcut.Save()
+        $shell = New-Object -ComObject WScript.Shell
+        $shortcut = $shell.CreateShortcut($shortcutPath)
+        $shortcut.TargetPath = $TargetPath
+        $shortcut.Save()
 
-    Write-Host "Shortcut created: $shortcutPath"
+        Write-Host "Shortcut created: $shortcutPath"
+    } catch {
+        Write-Error "Failed to create shortcut for '$TargetPath': $($_.Exception.Message)"
+    }
 }
 
-function Add-ToQuickAccess {
+function Switch-ToQuickAccess {
     <#
     .SYNOPSIS
     Pins a folder to Quick Access in File Explorer.
@@ -83,7 +91,7 @@ function Add-ToQuickAccess {
     Full path to the folder to pin.
 
     .EXAMPLE
-    Add-ToQuickAccess -FolderPath "$env:USERPROFILE\Projects"
+    Switch-ToQuickAccess -FolderPath "$env:USERPROFILE\Projects"
     #>
 
     [CmdletBinding()]
@@ -103,6 +111,6 @@ function Add-ToQuickAccess {
         }
 
     } catch {
-        Write-Warning "Failed to pin to Quick Access: $($_.Exception.Message)"
+        Write-ERROR "Failed to pin to Quick Access: $($_.Exception.Message)"
     }
 }

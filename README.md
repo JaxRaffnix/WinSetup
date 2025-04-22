@@ -13,6 +13,13 @@ A PowerShell module that simplifies the process of configuring Windows, such as 
 
 To install this module, download the `WinSetup` repository and run the `install.ps1` script.
 
+The default configuration can be created with this:
+```
+New-UserFolders -Folders @("Workspace", "Workspace\Temp", "Coding")
+Set-Git -UserName 'Jax Raffnix' -UserEmail '75493600+JaxRaffnix@users.noreply.github.com'
+Copy-Repos -RepoUrls @("https://github.com/JaxRaffnix/Hilfestellung.git", "https://github.com/JaxRaffnix/Backup-Manager.git", "https://github.com/JaxRaffnix/WinSetup.git") -TargetFolder "C:\Users\Jax\Coding"
+```
+
 ## Developing
 
 To update the manifest file, run the `Generate-Manifest.ps1` file.

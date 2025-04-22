@@ -1,9 +1,7 @@
 # PowerShell module build artifacts
 
 
-# Windows specific files
-Thumbs.db
-Desktop.ini
+
 
 # VSCode settings
 .vscode/
@@ -11,5 +9,3 @@ Desktop.ini
 # Logs
 *.log
 
-# Backup files
-*~

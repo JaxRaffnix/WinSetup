@@ -21,18 +21,16 @@ function Set-Git {
 
     [CmdletBinding()]
     param (
+        [Parameter(Mandatory)]
         [ValidateNotNullOrEmpty()]
-        [string]$UserName = 'Jax Raffnix',
+        [string]$UserName,
 
+        [Parameter(Mandatory)]
         [ValidateNotNullOrEmpty()]
-        [string]$UserEmail = '75493600+JaxRaffnix@users.noreply.github.com'
+        [string]$UserEmail
     )
 
-    # Check if Git is installed
-    if (-not (Get-Command git -ErrorAction SilentlyContinue)) {
-        Write-Error "Git is not installed or not available in the PATH. Please install Git and try again."
-        return
-    }
+    Test-CommandExists -App 'git'
 
     try {
         # Check if user configurations already exist
