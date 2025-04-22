@@ -1,21 +1,36 @@
 function Test-SystemIntegrity {
     <#
     .SYNOPSIS
-    Runs grouped system integrity and cleanup checks.
+    Performs a comprehensive set of system integrity, storage health, and cleanup checks.
 
     .DESCRIPTION
-    Supports high-level switches: -SystemHealth, -StorageHealth, -CleanupTasks, -All
+    This function allows you to run grouped checks for system health, storage health, and cleanup tasks. 
+    You can select specific checks using the provided switches or run all checks at once using the -All switch.
+    Results are logged to a timestamped file in the TEMP directory for review.
+
+    .PARAMETER SystemHealth
+    Runs checks related to system health, including Windows Defender status, system reliability issues, 
+    startup programs, DISM health scan, System File Checker (SFC), and CHKDSK.
+
+    .PARAMETER StorageHealth
+    Checks the health status of physical disks, including media type, health status, and operational status.
+
+    .PARAMETER Cleanup
+    Performs cleanup tasks such as identifying broken shortcuts on the desktop and running Disk Cleanup.
+
+    .PARAMETER All
+    Runs all available checks: system health, storage health, and cleanup tasks.
 
     .EXAMPLE
     Test-SystemIntegrity -All
-    Test-SystemIntegrity -SystemHealth -CleanupTasks
+    Runs all system integrity, storage health, and cleanup tasks.
     #>
 
     [CmdletBinding()]
     param (
         [switch]$SystemHealth,
         [switch]$StorageHealth,
-        [switch]$CleanupTasks,
+        [switch]$Cleanup,
         [switch]$All
     )
 
@@ -23,11 +38,11 @@ function Test-SystemIntegrity {
     if ($All) {
         $SystemHealth = $true
         $StorageHealth = $true
-        $CleanupTasks = $true
+        $Cleanup = $true
     }
 
-    if (-not ($SystemHealth -or $StorageHealth -or $CleanupTasks)) {
-        Write-Warning "No checks selected. Use -SystemHealth, -StorageHealth, -CleanupTasks, or -All."
+    if (-not ($SystemHealth -or $StorageHealth -or $Cleanup)) {
+        Write-Warning "No checks selected. Use -SystemHealth, -StorageHealth, -Cleanup, or -All."
         return
     }
 
@@ -38,16 +53,6 @@ function Test-SystemIntegrity {
 
     Write-Host "Running system integrity checks..."
     Write-Host "Log file: $logFile`n"
-
-    # CleanupTasks – Broken shortcuts
-    if ($CleanupTasks) {
-        Write-Host "Checking for broken shortcuts..."
-        Get-ChildItem -Path "$env:USERPROFILE\Desktop" -Filter *.lnk -Recurse | ForEach-Object {
-            if (-not (Test-Path ($_ | Select-Object -ExpandProperty Target))) {
-                Write-Warning "Broken shortcut: $($_.FullName)"
-            }
-        }
-    }
 
     # Build list of selected commands
     $commands = @()
@@ -67,8 +72,12 @@ function Test-SystemIntegrity {
         $commands += @{ Title = "Physical Disk Health"; Command = 'Get-PhysicalDisk | Select-Object DeviceID, MediaType, HealthStatus, OperationalStatus | Format-Table | Out-String' }
     }
 
-    if ($CleanupTasks) {
-        $commands += @{ Title = "Disk Cleanup"; Command = 'cleanmgr /sagerun:1 /autoclean' }
+    if ($Cleanup) {
+        $commands += @(
+            @{ Title = "Broken Desktop Shortcuts"; Command = 'Get-ChildItem -Path "$env:USERPROFILE\Desktop" -Filter *.lnk -Recurse | ForEach-Object { if (-not (Test-Path ($_ | Select-Object -ExpandProperty Target))) { Write-Warning "Broken shortcut: $($_.FullName)" } }'},
+            @{ Title = "Disk Cleanup"; Command = 'cleanmgr /sagerun:1 /autoclean' }
+            )
+        }
     }
 
     # Run commands

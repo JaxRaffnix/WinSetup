@@ -1,26 +1,38 @@
 function New-UserFolders {
     <#
     .SYNOPSIS
-    Creates user folders and links them via Desktop shortcuts and Quick Access.
+    Creates user folders and optionally links them via Desktop shortcuts and Quick Access.
 
     .DESCRIPTION
     For each folder under $env:USERPROFILE:
     - Creates the folder if it doesn't exist
-    - Creates a shortcut on the Desktop
-    - Pins the folder to Quick Access
+    - Optionally creates a shortcut on the Desktop
+    - Optionally pins the folder to Quick Access
 
     .PARAMETER Folders
     List of folder paths (relative to $env:USERPROFILE).
 
+    .PARAMETER CreateShortcuts
+    Switch to create Desktop shortcuts for the folders.
+
+    .PARAMETER PinToQuickAccess
+    Switch to pin the folders to Quick Access.
+
     .EXAMPLE
-    New-UserFolders -Folders @("Workspace", "Workspace\Temp", "Coding")
+    New-UserFolders -Folders @("Workspace", "Workspace\Temp", "Coding") -CreateShortcuts -PinToQuickAccess
     #>
 
     [CmdletBinding()]
     param (
         [Parameter(Mandatory)]
         [ValidateNotNullOrEmpty()]
-        [string[]]$Folders
+        [string[]]$Folders,
+
+        [Parameter()]
+        [switch]$CreateShortcuts,
+
+        [Parameter()]
+        [switch]$PinToQuickAccess
     )
 
     foreach ($folder in $Folders) {
@@ -28,17 +40,22 @@ function New-UserFolders {
 
         try {
             if (-not (Test-Path $path)) {
-            New-Item -ItemType Directory -Path $path -Force | Out-Null
-            Write-Host "Created folder: $path"
+                New-Item -ItemType Directory -Path $path -Force | Out-Null
+                Write-Host "Created folder: $path"
             } else {
-            Write-Warning "Folder already exists: $path"
+                Write-Warning "Folder already exists: $path"
             }
         } catch {
             Write-Error "Failed to create folder '$path': $($_.Exception.Message)"
         }
 
-        Add-Shortcut -TargetPath $path
-        Switch-ToQuickAccess -FolderPath $path
+        if ($CreateShortcuts) {
+            Add-Shortcut -TargetPath $path
+        }
+
+        if ($PinToQuickAccess) {
+            Switch-ToQuickAccess -FolderPath $path
+        }
     }
 }
 
@@ -67,6 +84,18 @@ function Add-Shortcut {
         $desktop = [Environment]::GetFolderPath("Desktop")
         $shortcutName = "$([System.IO.Path]::GetFileName($TargetPath)).lnk"
         $shortcutPath = Join-Path $desktop $shortcutName
+
+        if (Test-Path $shortcutPath) {
+            $shell = New-Object -ComObject WScript.Shell
+            $existingShortcut = $shell.CreateShortcut($shortcutPath)
+
+            if ($existingShortcut.TargetPath -eq $TargetPath) {
+                Write-Warning "Shortcut already exists and points to the correct target: $shortcutPath"
+                return
+            } else {
+                Write-Warning "Shortcut exists but points to a different target. Overwriting: $shortcutPath"
+            }
+        }
 
         $shell = New-Object -ComObject WScript.Shell
         $shortcut = $shell.CreateShortcut($shortcutPath)
@@ -107,10 +136,10 @@ function Switch-ToQuickAccess {
             $Namespace.Self.InvokeVerb("pintohome")
             Write-Host "Folder added to Quick Access: '$FolderPath'"
         } else {
-            Write-Warning "Cannot access folder: $FolderPath"
+            Write-Error "Cannot access folder: $FolderPath"
         }
 
     } catch {
-        Write-ERROR "Failed to pin to Quick Access: $($_.Exception.Message)"
+        Write-Error "Failed to pin to Quick Access: $($_.Exception.Message)"
     }
 }

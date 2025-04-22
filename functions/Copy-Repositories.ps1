@@ -1,4 +1,4 @@
-function Copy-Repos {
+function Copy-Repositories {
     <#
     .SYNOPSIS
     Clones a list of GitHub repositories to a specific folder.
@@ -42,7 +42,7 @@ function Copy-Repos {
         $repoPath = Join-Path -Path $TargetFolder -ChildPath $repoName
 
         if (Test-Path $repoPath) {
-            Write-Host "Repository already exists: $repoPath"
+            Write-Warning "Repository already exists: $repoPath"
         } else {
             try {
                 git clone $repoUrl $repoPath

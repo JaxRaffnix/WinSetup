@@ -1,4 +1,4 @@
-function Set-Git {
+function Set-GitConfiguration {
     <#
     .SYNOPSIS
     Configures Git with a global user name and email.
@@ -9,14 +9,12 @@ function Set-Git {
 
     .PARAMETER UserName
     The name to associate with commits.
-    Defaults to 'Jax Raffnix'.
 
     .PARAMETER UserEmail
     The email address to associate with commits.
-    Defaults to '75493600+JaxRaffnix@users.noreply.github.com'.
 
     .EXAMPLE
-    Set-Git -UserName "Alice" -UserEmail "alice@example.com"
+    Set-GitConfiguration -UserName "Alice" -UserEmail "alice@example.com"
     #>
 
     [CmdletBinding()]
@@ -38,7 +36,7 @@ function Set-Git {
         $existingUserEmail = git config --global user.email
 
         if ($existingUserName -eq $UserName -and $existingUserEmail -eq $UserEmail) {
-            Write-Host "Git is already configured with the same user name and email. Skipping configuration."
+            Write-Warning "Git is already configured with the same user name and email. Skipping configuration."
         } else {
             # Set default Git configurations
             git config --global init.defaultBranch main

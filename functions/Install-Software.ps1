@@ -35,5 +35,3 @@ function Install-Software {
         winget install --id $app --silent --accept-source-agreements --accept-package-agreements
     }
 }
-
-Export-ModuleMember -Function Install-Software
