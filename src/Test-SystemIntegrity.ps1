@@ -46,13 +46,12 @@ function Test-SystemIntegrity {
         return
     }
 
-    Test-SystemIntegrity -App 'gsudo'
+    Test-CommandExists -App 'gsudo'
 
     $timestamp = Get-Date -Format 'yyyy-MM-dd-HHmmss'
     $logFile = Join-Path $env:TEMP "SystemIntegrityCheck-$timestamp.log"
 
     Write-Host "Running system integrity checks..."
-    Write-Host "Log file: $logFile`n"
 
     # Build list of selected commands
     $commands = @()
@@ -74,25 +73,23 @@ function Test-SystemIntegrity {
 
     if ($Cleanup) {
         $commands += @(
-            @{ Title = "Broken Desktop Shortcuts"; Command = 'Get-ChildItem -Path "$env:USERPROFILE\Desktop" -Filter *.lnk -Recurse | ForEach-Object { if (-not (Test-Path ($_ | Select-Object -ExpandProperty Target))) { Write-Warning "Broken shortcut: $($_.FullName)" } }'},
+            @{ Title = "Broken Desktop Shortcuts"; Command = 'Get-ChildItem -Path "$env:USERPROFILE\Desktop" -Filter *.lnk -Recurse | ForEach-Object { $shell = New-Object -ComObject WScript.Shell; $shortcut = $shell.CreateShortcut($_.FullName); if (-not (Test-Path $shortcut.TargetPath)) { Write-Warning "Broken shortcut: $($_.FullName)" } }'},
             @{ Title = "Disk Cleanup"; Command = 'cleanmgr /sagerun:1 /autoclean' }
             )
-        }
-    }
+    }	
 
     # Run commands
     foreach ($cmd in $commands) {
         Write-Host "`n=== $($cmd.Title) ===" -ForegroundColor Cyan
         "`n=== $($cmd.Title) ===`n" | Out-File -Append -FilePath $logFile
-
+    
         try {
-            Invoke-Expression $cmd.Command 2>&1 | Tee-Object -Variable output | Out-File -Append -FilePath $logFile
-            $output
+            Write-Host "Executing: $($cmd.Command)" -ForegroundColor DarkCyan
+            Invoke-Expression $cmd.Command
         } catch {
             Write-Warning "$($cmd.Title) failed: $_"
-            "ERROR: $_" | Out-File -Append -FilePath $logFile
         }
     }
 
-    Write-Host "`nSystem integrity check completed. Log saved to:`n$logFile" -ForegroundColor Green
+    Write-Host "`nSystem integrity check completed." -ForegroundColor Green
 }

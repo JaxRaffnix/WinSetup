@@ -11,4 +11,5 @@ New-ModuleManifest -Path .\WinSetup.psd1 `
         'Switch-ToQuickAccess'
         'Set-GitConfiguration'
         'Test-SystemIntegrity'
+        'Update-Software'
     )
