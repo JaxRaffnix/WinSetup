@@ -35,6 +35,8 @@ function New-UserFolders {
         [switch]$PinToQuickAccess
     )
 
+    Write-Host "Creating user folders..." -ForegroundColor Cyan
+
     foreach ($folder in $Folders) {
         $path = Join-Path -Path $env:USERPROFILE -ChildPath $folder
 
@@ -57,6 +59,8 @@ function New-UserFolders {
             Switch-ToQuickAccess -FolderPath $path
         }
     }
+
+    Write-Host "Finished creating user folders." -ForegroundColor Green
 }
 
 function Add-Shortcut {

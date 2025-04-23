@@ -1,28 +1,35 @@
 function Install-Scoop {
     <#
     .SYNOPSIS
-        Installs Scoop and specified helper applications.
+        Installs Scoop and specified helper applications, along with additional Scoop buckets.
 
     .DESCRIPTION
-        This script installs Scoop, a command-line installer for Windows, and optionally installs specified helper applications.
+        This script installs Scoop, a command-line installer for Windows, and optionally installs specified helper applications and additional Scoop buckets.
+        It ensures the script is run with elevated privileges and sets the execution policy to *RemoteSigned* if necessary.
 
     .PARAMETER HelperApps
-        An array of helper applications to install using Scoop. Defaults to 'git', '7zip', and 'curl' if not specified.
+        An array of helper applications to install using Scoop. Defaults to 'git', '7zip', 'gsudo', and 'extras/vcredist2022' if not specified.
+
+    .PARAMETER Buckets
+        An array of additional Scoop buckets to add. Defaults to 'extras' and 'versions' if not specified.
+        Buckets are repositories of software definitions that Scoop uses to install applications.
 
     .EXAMPLE
-        Install-Scoop -HelperApps @('git', 'nodejs', 'python')
+        Install-Scoop -HelperApps @('git', 'nodejs') -Buckets @('extras', 'games')
 
-        Installs Scoop and the specified helper applications: git, nodejs, and python.
-
-    .NOTES
-        This script requires administrative privileges to run.
+        Installs Scoop, the specified helper applications (git and nodejs), and adds the specified buckets (extras and games).
     #>
 
     [CmdletBinding()]
     param (
+        [ValidateNotNullOrEmpty()]
         [string[]]$HelperApps = @('git', '7zip', 'gsudo', 'extras/vcredist2022'),
+
+        [ValidateNotNullOrEmpty()]
         [string[]]$Buckets = @('extras', 'versions')
     )
+
+    Write-Host "Installing Scoop and helper applications..." -ForegroundColor Cyan
 
     # Elevate privileges
     if (-not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) {
@@ -33,25 +40,27 @@ function Install-Scoop {
 
     # Fix untrusted script execution
     if ((Get-ExecutionPolicy) -ne "RemoteSigned") {
-        Write-Host "Setting execution policy to RemoteSigned..."
         Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned -Force
+        Write-Host "Execution Policy has been set to RemoteSigned."
     }
 
     # Install Scoop
     if (-not (Get-Command scoop -ErrorAction SilentlyContinue)) {
-        Write-Host "Installing Scoop..."
         Invoke-Expression (New-Object System.Net.WebClient).DownloadString('https://get.scoop.sh')
+        Write-Host "Scoop installed successfully."
     }
 
-    foreach ($bucket in $Buckets) {
-        Write-Host "Adding Scoop bucket: $bucket..."
-        scoop bucket add $bucket
-    }
     # Install helper Scoop apps
+    foreach ($bucket in $Buckets) {
+        scoop bucket add $bucket
+        # Write-Host "Installed Scoop bucket $bucket."
+    }
+
     foreach ($app in $HelperApps) {
-        Write-Host "Installing $app..."
         scoop install $app
     }
 
-    Update-Software -Mode 'Scoop'
+    Update-Software -UseScoop
+
+    Write-Host "Scoop and helper applications installed successfully." -ForegroundColor Green
 }

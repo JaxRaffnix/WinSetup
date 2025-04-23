@@ -15,14 +15,12 @@ function Remove-ScoopCache {
     Test-Installation -App 'gsudo'
 
     try {
-        Write-Host "Removing Scoop cache..." 
+        Write-Host "Removing Scoop cache and running cleanup ..." -ForegroundColor Cyan
         scoop cache rm *
-
-        Write-Host "Performing Scoop cleanup with elevated privileges..." 
         gsudo scoop cleanup *
 
-        Write-Host "Running Scoop checkup..." 
         scoop checkup
+        Write-Host "Scoop cache removed and cleanup completed." -ForegroundColor Green
     } catch {
         Write-Error "An error occurred while cleaning Scoop: $_"
     }

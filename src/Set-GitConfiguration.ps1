@@ -30,6 +30,8 @@ function Set-GitConfiguration {
 
     Test-Installation -App 'git'
 
+    Write-Host "Configuring Git..." -ForegroundColor Cyan
+
     try {
         # Check if user configurations already exist
         $existingUserName = git config --global user.name
@@ -49,9 +51,9 @@ function Set-GitConfiguration {
             git config --global user.name $UserName
             git config --global user.email $UserEmail
 
-            Write-Host "Git has been successfully configured with the following settings:"
-            Write-Host "User Name: $UserName"
-            Write-Host "User Email: $UserEmail"
+            Write-Host "Git has been successfully configured with the following settings:" -ForegroundColor Green
+            Write-Host "User Name: $UserName" -ForegroundColor Green
+            Write-Host "User Email: $UserEmail" -ForegroundColor Green
         }
     }
     catch {

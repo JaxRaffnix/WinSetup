@@ -8,7 +8,7 @@ New-ModuleManifest -Path .\WinSetup.psd1 `
     -ScriptsToProcess @('Install-Scoop.ps1') `
     -FunctionsToExport  @(
         'Copy-Repositories'
-        'Install-Software'
+        'Install-Applications'
         'Install-MSOffice'
         'New-UserFolders'
         'Switch-ToQuickAccess'

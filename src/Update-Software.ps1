@@ -26,17 +26,14 @@ function Update-Software {
 
     [CmdletBinding()]
     param (
-    [ValidateSet("Winget", "Scoop", "All")]
-    [string]$Mode = "All"
+    [switch]$UseWinget,
+    [switch]$UseScoop,
+    [switch]$All
     )
 
-    $UseWinget = $false
-    $UseScoop = $false
-
-    switch ($Mode) {
-        "Winget" { $UseWinget = $true }
-        "Scoop"  { $UseScoop = $true }
-        "All"    { $UseWinget = $true; $UseScoop = $true }
+    if ($All) {
+        $UseWinget = $true
+        $UseScoop = $true
     }
 
     Test-Installation -App 'winget'
@@ -44,26 +41,24 @@ function Update-Software {
     Test-Installation -App 'gsudo'
 
     try {
-        Write-Host "Starting software update process..."
+        Write-Host "Starting software update process..." -ForegroundColor Cyan
 
         Write-Warning "Please make sure common apps are closed before running this script. This includes browsers, IDE, terminals, powertoys, etc."
 
         if ($UseScoop) {
-            Write-Host "Updating Scoop..."
             scoop update
-
-            Write-Host "Updating all Scoop apps with elevated privileges..."
             gsudo scoop update *
+            Write-Host "Updated Scoop and apps"
             
             Remove-ScoopCache
         }
 
         if ($UseWinget) {
-            Write-Host "Running winget updates..."
             winget upgrade --all --accept-package-agreements --accept-source-agreements --disable-interactivity --include-unknown --include-pinned --silent --force
         }
+        Write-Host "Updated Winget apps"
 
-        Write-Host "Software update process completed successfully!"
+        Write-Host "Software update process completed successfully!" -ForegroundColor Green
     } catch {
         Write-Error "An error occurred during the update process: $_"
     }

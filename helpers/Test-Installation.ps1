@@ -4,7 +4,7 @@ function Test-Installation {
     Checks if a specific command-line application is installed and accessible.
 
     .DESCRIPTION
-    Uses Get-Command to determine if an executable like 'git',  etc., is available in the system's PATH.
+    Uses Get-Command to determine if an executable like 'git', 'gsudo', etc., is available in the system's PATH.
 
     .PARAMETER App
     The name of the application or command to check (e.g., 'git', 'gsudo').
@@ -20,11 +20,14 @@ function Test-Installation {
         [string]$App
     )
 
-
-    if (-not (Get-Command $App -ErrorAction SilentlyContinue)) {
-        if ($App == 'scoop'){
+    try {
+        # Check if the application is available in the PATH
+        Get-Command -Name $App -ErrorAction Stop | Out-Null
+    } catch {
+        if ($App -eq 'scoop') {
             Write-Error "Scoop is not installed. Please run 'Install-Scoop' to install it."
+        } else {
+            Write-Error "$App is not installed or not available in the PATH. Please install $App and try again."
         }
-        Write-Error "$App is not installed or not available in the PATH. Please install $App and try again."
     }
 }

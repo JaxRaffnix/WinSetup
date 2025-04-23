@@ -54,8 +54,6 @@ function Set-WindowsConfiguration {
         [switch]$EnableDeveloperMode
     )
 
-    Write-Host "Starting Windows configuration setup..." 
-
     # If -All switch is provided, enable all options
     if ($All) {
         $EnableClipboardSync = $true
@@ -69,15 +67,16 @@ function Set-WindowsConfiguration {
         $EnableDeveloperMode = $true
     }
 
+    Write-Host "Starting Windows configuration setup..." -ForegroundColor Cyan
+
     # Enable clipboard history and sync if the switch is provided
     if ($EnableClipboardSync) {
         try {
-            Write-Host "Enabling clipboard history and sync with devices..." 
             Set-ItemProperty -Path "HKCU:\Software\Microsoft\Clipboard" -Name "EnableClipboardHistory" -Value 1 -Force
             Set-ItemProperty -Path "HKCU:\Software\Microsoft\Clipboard" -Name "EnableClipboardSync" -Value 1 -Force
             Write-Host "Clipboard history and sync enabled successfully." 
         } catch {
-            Write-Warning "Failed to enable clipboard history and sync: $_" 
+            Write-Error "Failed to enable clipboard history and sync: $_" 
         }
     }
 
@@ -87,7 +86,7 @@ function Set-WindowsConfiguration {
             Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Search" -Name "SearchboxTaskbarMode" -Value 0 -Force
             Write-Host "Windows Search icon hidden successfully." 
         } catch {
-            Write-Warning "Failed to hide the Windows Search icon: $_" 
+            Write-Error "Failed to hide the Windows Search icon: $_" 
         }
     }
 
@@ -98,7 +97,7 @@ function Set-WindowsConfiguration {
             Set-Service -Name "WSearch" -StartupType Automatic -ErrorAction Stop
             Write-Host "Windows Search Indexing service enabled successfully." 
         } catch {
-            Write-Warning "Failed to enable Windows Search Indexing service: $_" 
+            Write-Error "Failed to enable Windows Search Indexing service: $_" 
         }
     }
 
@@ -109,7 +108,7 @@ function Set-WindowsConfiguration {
             Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize" -Name "SystemUsesLightTheme" -Value 0 -Force
             Write-Host "Dark mode enabled successfully." 
         } catch {
-            Write-Warning "Failed to enable dark mode: $_" 
+            Write-Error "Failed to enable dark mode: $_" 
         }
     }
 
@@ -119,7 +118,7 @@ function Set-WindowsConfiguration {
             Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\CabinetState" -Name "FullPathAddress" -Value 1 -Force
             Write-Host "Full path in Explorer title bar enabled successfully." 
         } catch {
-            Write-Warning "Failed to enable full path in Explorer title bar: $_" 
+            Write-Error "Failed to enable full path in Explorer title bar: $_" 
         }
     }
 
@@ -129,7 +128,7 @@ function Set-WindowsConfiguration {
             Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "Hidden" -Value 1 -Force
             Write-Host "Hidden files are now visible in File Explorer." 
         } catch {
-            Write-Warning "Failed to show hidden files: $_" 
+            Write-Error "Failed to show hidden files: $_" 
         }
     }
 
@@ -139,7 +138,7 @@ function Set-WindowsConfiguration {
             Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "HideFileExt" -Value 0 -Force
             Write-Host "File extensions are now visible in File Explorer." 
         } catch {
-            Write-Warning "Failed to show file extensions: $_" 
+            Write-Error "Failed to show file extensions: $_" 
         }
     }
 
@@ -149,7 +148,7 @@ function Set-WindowsConfiguration {
             Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" -Name "LongPathsEnabled" -Value 1 -Force
             Write-Host "Support for long file paths enabled successfully." 
         } catch {
-            Write-Warning "Failed to enable support for long file paths: $_" 
+            Write-Error "Failed to enable support for long file paths: $_" 
         }
     }
 
@@ -160,7 +159,7 @@ function Set-WindowsConfiguration {
             Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock" -Name "AllowAllTrustedApps" -Value 1 -Force
             Write-Host "Developer Mode enabled successfully." 
         } catch {
-            Write-Warning "Failed to enable Developer Mode: $_" 
+            Write-Error "Failed to enable Developer Mode: $_" 
         }
     }
 
@@ -196,7 +195,7 @@ function Set-WallpaperAndLockScreen {
 
     try {
         # Set the desktop wallpaper
-        Write-Host "Setting desktop wallpaper to $WallpaperPath..."
+        Write-Host "Setting desktop wallpaper to $WallpaperPath..." -ForegroundColor Cyan
         Add-Type -TypeDefinition @"
 using System;
 using System.Runtime.InteropServices;
@@ -215,7 +214,7 @@ public class Wallpaper {
 }
 "@
         [Wallpaper]::SetWallpaper($WallpaperPath)
-        Write-Host "Desktop wallpaper set successfully."
+        Write-Host "Desktop wallpaper set successfully." -ForegroundColor Green
 
         # Set the lock screen image
         $lockScreenKey = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\PersonalizationCSP"
@@ -225,8 +224,8 @@ public class Wallpaper {
         # Disable Widgets
         # Get-AppxPackage | Where-Object {$_.Name -like "*WebExperience*"} | Remove-AppxPackage
 
-        Write-Host "Lock screen image set successfully."
+        Write-Host "Lock screen image set successfully." -ForegroundColor Green
     } catch {
-        Write-Warning "Failed to set wallpaper or lock screen image: $_"
+        Write-Error "Failed to set wallpaper or lock screen image: $_"
     }
 }

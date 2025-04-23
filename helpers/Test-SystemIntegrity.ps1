@@ -31,7 +31,7 @@ function Test-SystemIntegrity {
         [switch]$SystemHealth,
         [switch]$StorageHealth,
         [switch]$Cleanup,
-        [switch]$All = $true
+        [switch]$All
     )
 
     # Expand group switches
@@ -42,16 +42,13 @@ function Test-SystemIntegrity {
     }
 
     if (-not ($SystemHealth -or $StorageHealth -or $Cleanup)) {
-        Write-Warning "No checks selected. Use -SystemHealth, -StorageHealth, -Cleanup, or -All."
-        return
+        Write-Error "No checks selected. Use -SystemHealth, -StorageHealth, -Cleanup, or -All."
+        return -1
     }
 
     Test-Installation -App 'gsudo'
 
-    $timestamp = Get-Date -Format 'yyyy-MM-dd-HHmmss'
-    $logFile = Join-Path $env:TEMP "SystemIntegrityCheck-$timestamp.log"
-
-    Write-Host "Running system integrity checks..."
+    Write-Host "Running system integrity checks..." -ForegroundColor Cyan
 
     # Build list of selected commands
     $commands = @()
@@ -81,13 +78,12 @@ function Test-SystemIntegrity {
     # Run commands
     foreach ($cmd in $commands) {
         Write-Host "`n=== $($cmd.Title) ===" -ForegroundColor Cyan
-        "`n=== $($cmd.Title) ===`n" | Out-File -Append -FilePath $logFile
     
         try {
             Write-Host "Executing: $($cmd.Command)" -ForegroundColor DarkCyan
             Invoke-Expression $cmd.Command
         } catch {
-            Write-Warning "$($cmd.Title) failed: $_"
+            Write-Error "$($cmd.Title) failed: $_"
         }
     }
 

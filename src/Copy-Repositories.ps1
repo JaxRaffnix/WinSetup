@@ -30,6 +30,8 @@ function Copy-Repositories {
 
     Test-Installation -App 'git'
 
+    Write-Host "Cloning repositories..." -ForegroundColor Cyan
+
     # Create the target folder if it doesn't exist
     if (-not (Test-Path $TargetFolder)) {
         New-Item -ItemType Directory -Path $TargetFolder -Force | Out-Null
@@ -53,4 +55,5 @@ function Copy-Repositories {
             }
         }
     }
+    Write-Host "All repositories cloned successfully." -ForegroundColor Green
 }
