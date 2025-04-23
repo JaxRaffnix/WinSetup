@@ -28,7 +28,7 @@ function Copy-Repositories {
         [string]$TargetFolder
     )
 
-    Test-CommandExists -App 'git'
+    Test-Installation -App 'git'
 
     # Create the target folder if it doesn't exist
     if (-not (Test-Path $TargetFolder)) {

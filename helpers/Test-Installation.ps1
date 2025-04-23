@@ -1,4 +1,4 @@
-function Test-CommandExists {
+function Test-Installation {
     <#
     .SYNOPSIS
     Checks if a specific command-line application is installed and accessible.
@@ -10,7 +10,7 @@ function Test-CommandExists {
     The name of the application or command to check (e.g., 'git', 'gsudo').
 
     .EXAMPLE
-    Test-CommandExists -App 'git'
+    Test-Installation -App 'git'
     #>
 
     [CmdletBinding()]

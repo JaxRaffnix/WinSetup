@@ -28,7 +28,7 @@ function Set-GitConfiguration {
         [string]$UserEmail
     )
 
-    Test-CommandExists -App 'git'
+    Test-Installation -App 'git'
 
     try {
         # Check if user configurations already exist

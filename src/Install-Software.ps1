@@ -34,4 +34,22 @@ function Install-Software {
     foreach ($app in $WingetApps) {
         winget install --id $app --silent --accept-source-agreements --accept-package-agreements
     }
+
+    update-Software
+    Remove-ScoopCache
+}
+
+function Install-MSOffice {
+    param(
+        [string]$ConfigLocation
+    )
+    if (-not (Test-Path $ConfigLocation)) {
+        Write-LogWarning "Configuration file not found at $ConfigLocation. Skipping Office installation."
+        return
+    }
+
+    Test-Installation -App 'winget'
+
+    Install-WithWinget Microsoft.OfficeDeploymentTool
+    Set-Location "C:\Program Files\OfficeDeploymentTool";  .\setup.exe /configure "$ConfigLocation"
 }

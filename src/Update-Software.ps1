@@ -39,9 +39,9 @@ function Update-Software {
         "All"    { $UseWinget = $true; $UseScoop = $true }
     }
 
-    Test-CommandExists -App 'winget'
-    Test-CommandExists -App 'scoop'
-    Test-CommandExists -App 'gsudo'
+    Test-Installation -App 'winget'
+    Test-Installation -App 'scoop'
+    Test-Installation -App 'gsudo'
 
     try {
         Write-Host "Starting software update process..."

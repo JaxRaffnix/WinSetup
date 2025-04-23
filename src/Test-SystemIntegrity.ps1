@@ -46,7 +46,7 @@ function Test-SystemIntegrity {
         return
     }
 
-    Test-CommandExists -App 'gsudo'
+    Test-Installation -App 'gsudo'
 
     $timestamp = Get-Date -Format 'yyyy-MM-dd-HHmmss'
     $logFile = Join-Path $env:TEMP "SystemIntegrityCheck-$timestamp.log"

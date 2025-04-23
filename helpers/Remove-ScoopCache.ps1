@@ -11,8 +11,8 @@ function Remove-ScoopCache {
     Remove-ScoopCache
     #>
 
-    Test-CommandExists -App 'scoop'
-    Test-CommandExists -App 'gsudo'
+    Test-Installation -App 'scoop'
+    Test-Installation -App 'gsudo'
 
     try {
         Write-Host "Removing Scoop cache..." 
