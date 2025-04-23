@@ -22,6 +22,9 @@ function Test-Installation {
 
 
     if (-not (Get-Command $App -ErrorAction SilentlyContinue)) {
+        if ($App == 'scoop'){
+            Write-Error "Scoop is not installed. Please run 'Install-Scoop' to install it."
+        }
         Write-Error "$App is not installed or not available in the PATH. Please install $App and try again."
     }
 }

@@ -31,7 +31,7 @@ function Test-SystemIntegrity {
         [switch]$SystemHealth,
         [switch]$StorageHealth,
         [switch]$Cleanup,
-        [switch]$All
+        [switch]$All = $true
     )
 
     # Expand group switches
