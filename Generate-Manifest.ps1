@@ -8,6 +8,7 @@ New-ModuleManifest -Path .\WinSetup.psd1 `
     -FunctionsToExport  @(
         'Copy-Repositories'
         'New-UserFolders'
+        'Remove-ScoopCache'
         'Switch-ToQuickAccess'
         'Set-GitConfiguration'
         'Set-WindowsConfiguration'

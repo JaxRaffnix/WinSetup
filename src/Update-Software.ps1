@@ -46,6 +46,8 @@ function Update-Software {
     try {
         Write-Host "Starting software update process..."
 
+        Write-Warning "Please make sure common apps are closed before running this script. This includes browsers, IDE, terminals, powertoys, etc."
+
         if ($UseScoop) {
             Write-Host "Updating Scoop..."
             scoop update

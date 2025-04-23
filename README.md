@@ -34,3 +34,5 @@ openssl or schannel?
 ```powershell
 git config --global http.sslBackend openssl # openssl or schannel
 ```
+
+Remove-ScoopCache as helper file? user function yes or no?

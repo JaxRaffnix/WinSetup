@@ -18,8 +18,8 @@ function Install-Software {
 
     [CmdletBinding()]
     param (
-        [string[]]$ScoopApps = @("git", "neovim"),
-        [string[]]$WingetApps = @("Mozilla.Firefox", "Microsoft.PowerToys")
+        [string[]]$ScoopApps,
+        [string[]]$WingetApps 
     )
 
     if (-not (Get-Command scoop -ErrorAction SilentlyContinue)) {
