@@ -26,3 +26,9 @@ Test-SystemIntegrity -All
 ## Developing
 
 To update the manifest file, run the `Generate-Manifest.ps1` file.
+
+## To Do
+openssl or schannel?
+```powershell
+git config --global http.sslBackend openssl # openssl or schannel
+```

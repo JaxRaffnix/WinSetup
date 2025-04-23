@@ -23,9 +23,15 @@
     Ensure that Winget, Scoop, and gsudo are installed and properly configured on your system.
 #>
 function Update-Software {
+    [CmdletBinding()]
     param (
+        [ValidateNotNullOrEmpty()]
         [switch]$UseWinget,
+        
+        [ValidateNotNullOrEmpty()]
         [switch]$UseScoop,
+        
+        [ValidateNotNullOrEmpty()]
         [switch]$All 
     )
 

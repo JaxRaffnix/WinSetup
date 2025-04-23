@@ -9,9 +9,8 @@ Then imports the module to make it available immediately.
 #>
 
 $ModuleName = Split-Path -Leaf $PSScriptRoot
-$TargetPath = Join-Path -Path "$HOME\Documents\PowerShell\Modules" -ChildPath $ModuleName
-
-Write-Host "Installing module '$ModuleName' to '$TargetPath'..."
+$UserModulesPath = "$env:USERPROFILE\Documents\PowerShell\Modules"
+$TargetPath = Join-Path -Path $UserModulesPath -ChildPath $ModuleName
 
 # Remove the existing module folder if it exists
 if (Test-Path $TargetPath) {
@@ -19,6 +18,7 @@ if (Test-Path $TargetPath) {
     Remove-Item -Path $TargetPath -Recurse -Force
 }
 
+Write-Host "Installing module '$ModuleName' to '$TargetPath'..."
 # Create target path if it doesn't exist
 if (-not (Test-Path $TargetPath)) {
     New-Item -ItemType Directory -Path $TargetPath -Force | Out-Null
@@ -29,6 +29,7 @@ Copy-Item -Path "$PSScriptRoot\*" -Destination $TargetPath -Recurse -Force
 
 # Import the module
 try {
+    $env:PSModulePath += ";$UserModulesPath"    #Update the Environment variable to include the new module path
     Import-Module $ModuleName -Force -ErrorAction Stop
     Write-Host "Module '$ModuleName' installed and imported successfully." -ForegroundColor Green
 } catch {
