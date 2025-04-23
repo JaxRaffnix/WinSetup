@@ -10,6 +10,8 @@ New-ModuleManifest -Path .\WinSetup.psd1 `
         'New-UserFolders'
         'Switch-ToQuickAccess'
         'Set-GitConfiguration'
+        'Set-WindowsConfiguration'
+        'Set-WallpaperAndLockScreen'
         'Test-SystemIntegrity'
         'Update-Software'
     )

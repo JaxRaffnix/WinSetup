@@ -23,21 +23,20 @@
     Ensure that Winget, Scoop, and gsudo are installed and properly configured on your system.
 #>
 function Update-Software {
+
     [CmdletBinding()]
     param (
-        [ValidateNotNullOrEmpty()]
-        [switch]$UseWinget,
-        
-        [ValidateNotNullOrEmpty()]
-        [switch]$UseScoop,
-        
-        [ValidateNotNullOrEmpty()]
-        [switch]$All 
+    [ValidateSet("Winget", "Scoop", "All")]
+    [string]$Mode = "All"
     )
 
-    if ($All) {
-        $UseWinget = $true
-        $UseScoop = $true
+    $UseWinget = $false
+    $UseScoop = $false
+
+    switch ($Mode) {
+        "Winget" { $UseWinget = $true }
+        "Scoop"  { $UseScoop = $true }
+        "All"    { $UseWinget = $true; $UseScoop = $true }
     }
 
     Test-CommandExists -App 'winget'
@@ -47,11 +46,6 @@ function Update-Software {
     try {
         Write-Host "Starting software update process..."
 
-        if ($UseWinget) {
-            Write-Host "Running winget updates..."
-            winget upgrade --all --accept-package-agreements --accept-source-agreements --disable-interactivity --include-unknown --include-pinned --silent --force
-        }
-
         if ($UseScoop) {
             Write-Host "Updating Scoop..."
             scoop update
@@ -60,6 +54,11 @@ function Update-Software {
             gsudo scoop update *
             
             Remove-ScoopCache
+        }
+
+        if ($UseWinget) {
+            Write-Host "Running winget updates..."
+            winget upgrade --all --accept-package-agreements --accept-source-agreements --disable-interactivity --include-unknown --include-pinned --silent --force
         }
 
         Write-Host "Software update process completed successfully!"

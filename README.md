@@ -16,6 +16,8 @@ To install this module, download the `WinSetup` repository and run the `install.
 The default configuration can be created with this:
 ```
 New-UserFolders -Folders @("Workspace", "Workspace\Temp", "Coding") -CreateShortcuts -PinToQuickAccess
+Set-WindowsConfiguration -All
+Set-WallpaperAndLockScreen -WallpaperPath "C:\Images\wallpaper.jpg" -LockScreenPath "C:\Images\lockscreen.jpg"
 
 Update-Software -All
 Set-GitConfiguration -UserName 'Jax Raffnix' -UserEmail '75493600+JaxRaffnix@users.noreply.github.com'
