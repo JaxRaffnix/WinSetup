@@ -48,25 +48,75 @@ function Install-Applications {
     Test-Installation -App 'scoop'
     Test-Installation -App 'gsudo'
 
+    Update-Software -UseScoop
+
     # Install selected categories
     if ($Core) {
         Write-Host "Installing core applications..." -ForegroundColor Cyan
-    }
 
-    if ($Games) {
-        Write-Host "Installing games..." -ForegroundColor Cyan
+        $CoreApps = @('vscode', 'powertoys', 'keepassxc', 'restic', 'obsidian', 'googlechrome', 'mathpix')
+
+        foreach ($app in $CoreApps) {
+            Install-WithWinget $app
+        }
+        
+        "$HOME\scoop\apps\powertoys\current\install-context.ps1"
+
+        "$HOME\scoop\apps\vscode\current\install-context.reg"
+        "$HOME\scoop\apps\vscode\current\install-associations.reg"  
+        "$HOME\scoop\apps\vscode\current\install-github-integration.reg"
     }
 
     if ($Messengers) {
         Write-Host "Installing messengers..." -ForegroundColor Cyan
+
+        $MessengersApps = @('discord', 'signal', 'thunderbird')
+
+        foreach ($app in $MessengersApps) {
+            Install-WithScoop $app
+        }
+
+        Install-WithWinget 9NKSQGP7F2NH # this installs whatsapp.
     }
 
     if ($ProgrammingTools) {
         Write-Host "Installing programming tools..." -ForegroundColor Cyan
+
+        $ProgrammingApps =  @('gcc', 'inkscape', 'miktex', 'perl', 'python', 'rufus', 'pdfcpu')
+
+        foreach ($app in $ProgrammingApps) {
+            Install-WithScoop $app
+        }
+
+        "$HOME\scoop\apps\python\current\install-pep-514.reg" 
+        "python.exe -m pip install --upgrade pip"
+
+        Start-Process "https://www.mathworks.com/products/matlab.html"
+        Start-Process "https://www.analog.com/en/design-center/design-tools-and-calculators/ltspice-simulator.html"
+    }
+
+    if ($Games) {
+        Write-Host "Installing games..." -ForegroundColor Cyan
+
+        Install-ScoopBucket games
+
+        $GamesApps = @('epicgames', 'battle-net', 'gog', 'steam', 'ubisoftconnect', 'nvidia-profile-inspector')
+
+        foreach ($app in $GamesApps) {
+            Install-WithScoop $app
+        }
+
+        gsudo scoop install epic-games-launcher
+
+        Install-WithWinget ElectronicArts.EADesktop
+        Install-WithWinget Logitech.GHUB
+        Install-WithWinget Nvidia.GeForceExperience
+        Install-WithWinget RiotGames.Valorant.EU
+        Start-Process "https://www.duckychannel.com.tw/en/support"
     }
 
     # Update software repositories
-    Update-Software -Mode 'All'
+    Update-Software -All
 
     Write-Host "Finished app install process." -ForegroundColor Green
 
@@ -83,8 +133,8 @@ function Install-MSOffice {
     )
 
     if (-not (Test-Path $ConfigLocation)) {
-        Write-Warning "Configuration file not found at $ConfigLocation. Skipping Office installation."
-        return
+        Write-Error "Configuration file not found at $ConfigLocation."
+        return -1
     }
 
     Test-Installation -App 'winget'

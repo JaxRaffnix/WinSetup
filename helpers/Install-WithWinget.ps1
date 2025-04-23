@@ -17,7 +17,7 @@ function Install-WithWinget {
         if ($alreadyInstalledMessages | Where-Object { $Result.Output -match $_ }) {
             Write-Warning "Already installed $App."
         } else {
-            Write-Warning "Could not install $App."
+            Write-Error "Could not install $App."
         }
     } else {
         # Write-Host "Successfully installed $App."
