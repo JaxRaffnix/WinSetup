@@ -5,7 +5,7 @@ New-ModuleManifest -Path .\WinSetup.psd1 `
     -Description 'Simplifies Windows configuration.' `
     -ProjectUri 'https://github.com/JaxRaffnix/WinSetup' `
     -PowerShellVersion '5.1' `
-    -ScriptsToProcess @('Install-Scoop.ps1') `
+    -ScriptsToProcess @('helpers\Install-Scoop.ps1') `
     -FunctionsToExport  @(
         'Copy-Repositories'
         'Install-Applications'
@@ -15,5 +15,5 @@ New-ModuleManifest -Path .\WinSetup.psd1 `
         'Set-GitConfiguration'
         'Set-WindowsConfiguration'
         'Set-WallpaperAndLockScreen'
-        'Update-Software'
+        'Update-Applications'
     )

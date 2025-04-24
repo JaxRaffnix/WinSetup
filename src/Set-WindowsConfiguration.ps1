@@ -4,7 +4,7 @@ function Set-WindowsConfiguration {
     Configures local Windows settings.
 
     .DESCRIPTION
-    This function sets up various local Windows settings such as time zone, power settings, and system preferences.
+    This function configures various local Windows settings, including enabling clipboard sync, hiding the search icon, enabling dark mode, showing hidden files, and more.
 
     .PARAMETER All
     Enables all configuration options.
@@ -65,6 +65,12 @@ function Set-WindowsConfiguration {
         $ShowFileExtensions = $true
         $EnableLongPaths = $true
         $EnableDeveloperMode = $true
+    }
+
+    # Check if any switch is true
+    if (-not ($EnableClipboardSync -or $HideSearchIcon -or $EnableSearchIndex -or $EnableDarkMode -or $EnableFullPathInExplorer -or $ShowHiddenFiles -or $ShowFileExtensions -or $EnableLongPaths -or $EnableDeveloperMode)) {
+        Write-Error "No configuration options were selected. Use -All or specify individual switches."
+        return -1
     }
 
     Write-Host "Starting Windows configuration setup..." -ForegroundColor Cyan
@@ -193,10 +199,8 @@ function Set-WallpaperAndLockScreen {
         [string]$LockScreenPath
     )
 
-    try {
-        # Set the desktop wallpaper
-        Write-Host "Setting desktop wallpaper to $WallpaperPath..." -ForegroundColor Cyan
-        Add-Type -TypeDefinition @"
+    Write-Host "Setting desktop wallpaper to $WallpaperPath..." -ForegroundColor Cyan
+    Add-Type -TypeDefinition @"
 using System;
 using System.Runtime.InteropServices;
 
@@ -213,6 +217,9 @@ public class Wallpaper {
     }
 }
 "@
+
+    try {
+        # Set the desktop wallpaper
         [Wallpaper]::SetWallpaper($WallpaperPath)
         Write-Host "Desktop wallpaper set successfully." -ForegroundColor Green
 

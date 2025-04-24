@@ -43,21 +43,25 @@ function Install-Applications {
         $ProgrammingTools = $true
     }
 
+    if (-not ($Core -or $Games -or $Messengers -or $ProgrammingTools)) {
+        Write-Error "Please specify at least one category to install."
+        return -1
+    }
+
     # Ensure required tools are installed
     Test-Installation -App 'winget'
     Test-Installation -App 'scoop'
     Test-Installation -App 'gsudo'
 
-    Update-Software -UseScoop
+    Update-Applications -UseScoop
 
     # Install selected categories
     if ($Core) {
         Write-Host "Installing core applications..." -ForegroundColor Cyan
 
-        $CoreApps = @('vscode', 'powertoys', 'keepassxc', 'restic', 'obsidian', 'googlechrome', 'mathpix')
-
-        foreach ($app in $CoreApps) {
-            Install-WithWinget $app
+        $ScoopCoreApps = @('vscode', 'powertoys', 'keepassxc', 'restic', 'obsidian', 'googlechrome', 'mathpix')
+        foreach ($app in $ScoopCoreApps) {
+            Install-WithScoop $app
         }
         
         "$HOME\scoop\apps\powertoys\current\install-context.ps1"
@@ -65,25 +69,34 @@ function Install-Applications {
         "$HOME\scoop\apps\vscode\current\install-context.reg"
         "$HOME\scoop\apps\vscode\current\install-associations.reg"  
         "$HOME\scoop\apps\vscode\current\install-github-integration.reg"
+
+        $WingetCoreApps = @('Microsoft.WindowsTerminal', 'Spotify.Spotify', 'Google.GoogleDrive')
+        foreach ($app in $WingetCoreApps) {
+            Install-WithWinget $app
+        }
+
+        gsudo Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted
+        gsudo Install-Module PSScriptTools
     }
 
     if ($Messengers) {
         Write-Host "Installing messengers..." -ForegroundColor Cyan
 
-        $MessengersApps = @('discord', 'signal', 'thunderbird')
-
-        foreach ($app in $MessengersApps) {
+        $ScoopMessengersApps = @('discord', 'signal', 'thunderbird')
+        foreach ($app in $ScoopMessengersApps) {
             Install-WithScoop $app
         }
 
-        Install-WithWinget 9NKSQGP7F2NH # this installs whatsapp.
+        $WingetMessengersApps = @('9NKSQGP7F2NH')   # this installs whatsapp.
+        foreach ($app in $WingetMessengersApps) {
+            Install-WithWinget $app
+        }
     }
 
     if ($ProgrammingTools) {
         Write-Host "Installing programming tools..." -ForegroundColor Cyan
 
         $ProgrammingApps =  @('gcc', 'inkscape', 'miktex', 'perl', 'python', 'rufus', 'pdfcpu')
-
         foreach ($app in $ProgrammingApps) {
             Install-WithScoop $app
         }
@@ -100,23 +113,23 @@ function Install-Applications {
 
         Install-ScoopBucket games
 
-        $GamesApps = @('epicgames', 'battle-net', 'gog', 'steam', 'ubisoftconnect', 'nvidia-profile-inspector')
-
-        foreach ($app in $GamesApps) {
+        $ScoopGamesApps = @('playnite', 'battlenet', 'steam', 'ubisoftconnect', 'nvidia-profile-inspector')
+        foreach ($app in $ScoopGamesApps) {
             Install-WithScoop $app
         }
 
         gsudo scoop install epic-games-launcher
 
-        Install-WithWinget ElectronicArts.EADesktop
-        Install-WithWinget Logitech.GHUB
-        Install-WithWinget Nvidia.GeForceExperience
-        Install-WithWinget RiotGames.Valorant.EU
+        $WingetGamesApps = @('ElectronicArts.EADesktop', 'Logitech.GHUB', 'Nvidia.GeForceExperience', 'RiotGames.Valorant.EU')
+        foreach ($app in $WingetGamesApps) {
+            Install-WithWinget $app
+        }
+
         Start-Process "https://www.duckychannel.com.tw/en/support"
     }
 
     # Update software repositories
-    Update-Software -All
+    Update-Applications -All
 
     Write-Host "Finished app install process." -ForegroundColor Green
 
@@ -128,7 +141,10 @@ function Install-Applications {
 
 
 function Install-MSOffice {
+
+    [CmdletBinding()]
     param(
+        [Parameter(Mandatory)]
         [string]$ConfigLocation
     )
 

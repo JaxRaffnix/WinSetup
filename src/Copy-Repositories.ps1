@@ -55,5 +55,6 @@ function Copy-Repositories {
             }
         }
     }
+    
     Write-Host "All repositories cloned successfully." -ForegroundColor Green
 }

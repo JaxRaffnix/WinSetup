@@ -39,22 +39,23 @@ function Set-GitConfiguration {
 
         if ($existingUserName -eq $UserName -and $existingUserEmail -eq $UserEmail) {
             Write-Warning "Git is already configured with the same user name and email. Skipping configuration."
-        } else {
-            # Set default Git configurations
-            git config --global init.defaultBranch main
-            git config --global credential.helper manager
-            git config --global color.ui auto
-            git config --global core.autocrlf true
-            git config --global pull.rebase false
-
-            # Set user-specific configurations
-            git config --global user.name $UserName
-            git config --global user.email $UserEmail
-
-            Write-Host "Git has been successfully configured with the following settings:" -ForegroundColor Green
-            Write-Host "User Name: $UserName" -ForegroundColor Green
-            Write-Host "User Email: $UserEmail" -ForegroundColor Green
+            return 
         }
+
+        # Set default Git configurations
+        git config --global init.defaultBranch main
+        git config --global credential.helper manager
+        git config --global color.ui auto
+        git config --global core.autocrlf true
+        git config --global pull.rebase false
+
+        # Set user-specific configurations
+        git config --global user.name $UserName
+        git config --global user.email $UserEmail
+
+        Write-Host "Git has been successfully configured with the following settings:" -ForegroundColor Green
+        Write-Host "User Name: $UserName" -ForegroundColor Green
+        Write-Host "User Email: $UserEmail" -ForegroundColor Green
     }
     catch {
         Write-Error "An error occurred while configuring Git: $_"
