@@ -50,23 +50,23 @@ A PowerShell module designed to streamline the process of configuring Windows en
 
 ### Default Configuration
 
-Run the following commands to set up a default configuration:
+Run the following commands from the project root folder to set up a default configuration:
 
 ```powershell
 # Remember evelated credentials in cache, results in less pop ups
 gsudo cache on
 
 # Create user folders and shortcuts
-New-UserFolders -Folders @("Workspace", "Coding") -CreateShortcuts -PinToQuickAccess
+New-UserFolders -Folders @("Workspace", "Coding") -CreateDesktopShortcuts -PinToQuickAccess
 New-UserFolders -Folders @("Workspace\Temp")
 
 # Apply system-wide configurations
 Set-WindowsConfiguration -All
-Set-WallpaperAndLockScreen -WallpaperPath "$projectRoot\assets\wallpaper.jpg" -LockScreenPath "$projectRoot\assets\wallpaper.jpg"
+Set-WallpaperAndLockScreen -WallpaperPath ".\assets\wallpaper.jpg" -LockScreenPath ".\assets\wallpaper.jpg"
 
 # Install applications
 Install-Applications -Core -Messengers -ProgrammingTools -Games
-Install-Office -ConfigLocation "$projectRoot\configs\office365.xml"
+Install-MSOffice -ConfigLocation ".\assets\office365.xml"
 
 # Configure Git
 Set-GitConfiguration -UserName 'Jax Raffnix' -UserEmail '75493600+JaxRaffnix@users.noreply.github.com'

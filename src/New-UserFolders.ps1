@@ -12,14 +12,14 @@ function New-UserFolders {
     .PARAMETER Folders
     List of folder paths (relative to $env:USERPROFILE).
 
-    .PARAMETER CreateShortcuts
+    .PARAMETER CreateDesktopShortcuts
     Switch to create Desktop shortcuts for the folders.
 
     .PARAMETER PinToQuickAccess
     Switch to pin the folders to Quick Access.
 
     .EXAMPLE
-    New-UserFolders -Folders @("Workspace", "Workspace\Temp", "Coding") -CreateShortcuts -PinToQuickAccess
+    New-UserFolders -Folders @("Workspace", "Workspace\Temp", "Coding") -CreateDesktopShortcuts -PinToQuickAccess
     #>
 
     [CmdletBinding()]
@@ -29,7 +29,7 @@ function New-UserFolders {
         [string[]]$Folders,
 
         [Parameter()]
-        [switch]$CreateShortcuts,
+        [switch]$CreateDesktopShortcuts,
 
         [Parameter()]
         [switch]$PinToQuickAccess
@@ -51,7 +51,7 @@ function New-UserFolders {
             Write-Error "Failed to create folder '$path': $($_.Exception.Message)"
         }
 
-        if ($CreateShortcuts) {
+        if ($CreateDesktopShortcuts) {
             Add-Shortcut -TargetPath $path
         }
 

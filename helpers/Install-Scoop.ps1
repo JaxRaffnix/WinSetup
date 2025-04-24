@@ -65,6 +65,4 @@ function Install-Scoop {
     Write-Host "Scoop and helper applications installed successfully." -ForegroundColor Green
 }
 
-# Write-Host "You are here!"
-
 Install-Scoop
