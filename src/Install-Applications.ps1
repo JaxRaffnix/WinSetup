@@ -45,8 +45,16 @@ function Install-Applications {
 
     if (-not ($Core -or $Games -or $Messengers -or $ProgrammingTools)) {
         Write-Error "Please specify at least one category to install."
-        return -1
+        return 1
     }
+
+    # Load applications from JSON file
+    $AppsFile = "$PSScriptRoot\config\apps.json"
+    if (-not (Test-Path $AppsFile)) {
+        Write-Error "Applications file not found at $AppsFile."
+        return 1
+    }
+    $Applications = Get-Content -Path $AppsFile | ConvertFrom-Json
 
     # Ensure required tools are installed
     Test-Installation -App 'winget'
@@ -59,19 +67,17 @@ function Install-Applications {
     if ($Core) {
         Write-Host "Installing core applications..." -ForegroundColor Cyan
 
-        $ScoopCoreApps = @('vscode', 'powertoys', 'keepassxc', 'restic', 'obsidian', 'googlechrome', 'mathpix')
-        foreach ($app in $ScoopCoreApps) {
+        foreach ($app in $Applications.Core.Scoop) {
             Install-WithScoop $app
         }
-        
-        "$HOME\scoop\apps\powertoys\current\install-context.ps1"
 
-        "$HOME\scoop\apps\vscode\current\install-context.reg"
-        "$HOME\scoop\apps\vscode\current\install-associations.reg"  
-        "$HOME\scoop\apps\vscode\current\install-github-integration.reg"
+        foreach ($script in $Applications.Core.ContextScripts) {
+            if (Test-Path $script) {
+                & $script
+            }
+        }
 
-        $WingetCoreApps = @('Microsoft.WindowsTerminal', 'Spotify.Spotify', 'Google.GoogleDrive')
-        foreach ($app in $WingetCoreApps) {
+        foreach ($app in $Applications.Core.Winget) {
             Install-WithWinget $app
         }
 
@@ -82,13 +88,11 @@ function Install-Applications {
     if ($Messengers) {
         Write-Host "Installing messengers..." -ForegroundColor Cyan
 
-        $ScoopMessengersApps = @('discord', 'signal', 'thunderbird')
-        foreach ($app in $ScoopMessengersApps) {
+        foreach ($app in $Applications.Messengers.Scoop) {
             Install-WithScoop $app
         }
 
-        $WingetMessengersApps = @('9NKSQGP7F2NH')   # this installs whatsapp.
-        foreach ($app in $WingetMessengersApps) {
+        foreach ($app in $Applications.Messengers.Winget) {
             Install-WithWinget $app
         }
     }
@@ -96,16 +100,19 @@ function Install-Applications {
     if ($ProgrammingTools) {
         Write-Host "Installing programming tools..." -ForegroundColor Cyan
 
-        $ProgrammingApps =  @('gcc', 'inkscape', 'miktex', 'perl', 'python', 'rufus', 'pdfcpu')
-        foreach ($app in $ProgrammingApps) {
+        foreach ($app in $Applications.ProgrammingTools.Scoop) {
             Install-WithScoop $app
         }
 
-        "$HOME\scoop\apps\python\current\install-pep-514.reg" 
-        "python.exe -m pip install --upgrade pip"
+        foreach ($script in $Applications.ProgrammingTools.PythonScripts) {
+            if (Test-Path $script -or $script -match 'python.exe') {
+                & $script
+            }
+        }
 
-        Start-Process "https://www.mathworks.com/products/matlab.html"
-        Start-Process "https://www.analog.com/en/design-center/design-tools-and-calculators/ltspice-simulator.html"
+        foreach ($link in $Applications.ProgrammingTools.ExternalLinks) {
+            Start-Process $link
+        }
     }
 
     if ($Games) {
@@ -113,19 +120,21 @@ function Install-Applications {
 
         Install-ScoopBucket games
 
-        $ScoopGamesApps = @('playnite', 'battlenet', 'steam', 'ubisoftconnect', 'nvidia-profile-inspector')
-        foreach ($app in $ScoopGamesApps) {
+        foreach ($app in $Applications.Games.Scoop) {
             Install-WithScoop $app
         }
 
-        gsudo scoop install epic-games-launcher
+        foreach ($app in $Applications.Games.Extra) {
+            gsudo scoop install $app
+        }
 
-        $WingetGamesApps = @('ElectronicArts.EADesktop', 'Logitech.GHUB', 'Nvidia.GeForceExperience', 'RiotGames.Valorant.EU')
-        foreach ($app in $WingetGamesApps) {
+        foreach ($app in $Applications.Games.Winget) {
             Install-WithWinget $app
         }
 
-        Start-Process "https://www.duckychannel.com.tw/en/support"
+        foreach ($link in $Applications.Games.ExternalLinks) {
+            Start-Process $link
+        }
     }
 
     # Update software repositories
@@ -135,8 +144,6 @@ function Install-Applications {
 
     # Clean up Scoop cache
     Remove-ScoopCache
-
-    Test-SystemIntegrity -All
 }
 
 
@@ -145,12 +152,13 @@ function Install-MSOffice {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
+        [ValidateScript({ Test-Path $_ -PathType Leaf })]
         [string]$ConfigLocation
     )
 
     if (-not (Test-Path $ConfigLocation)) {
         Write-Error "Configuration file not found at $ConfigLocation."
-        return -1
+        return 1
     }
 
     Test-Installation -App 'winget'

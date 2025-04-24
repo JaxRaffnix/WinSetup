@@ -24,7 +24,7 @@ function Copy-Repositories {
         [string[]]$RepoUrls,
 
         [Parameter(Mandatory)]
-        [ValidateNotNullOrEmpty()]
+        [ValidateScript({ Test-Path $_ -PathType Leaf })]
         [string]$TargetFolder
     )
 

@@ -1,0 +1,33 @@
+{
+    "Core": {
+        "Scoop": ["vscode", "powertoys", "keepassxc", "restic", "obsidian", "googlechrome", "mathpix"],
+        "Winget": ["Microsoft.WindowsTerminal", "Spotify.Spotify", "Google.GoogleDrive"],
+        "ContextScripts": [
+            "$HOME\\scoop\\apps\\powertoys\\current\\install-context.ps1",
+            "$HOME\\scoop\\apps\\vscode\\current\\install-context.reg",
+            "$HOME\\scoop\\apps\\vscode\\current\\install-associations.reg",
+            "$HOME\\scoop\\apps\\vscode\\current\\install-github-integration.reg"
+        ]
+    },
+    "Messengers": {
+        "Scoop": ["discord", "signal", "thunderbird"],
+        "Winget": ["9NKSQGP7F2NH"]
+    },
+    "ProgrammingTools": {
+        "Scoop": ["gcc", "inkscape", "miktex", "perl", "python", "rufus", "pdfcpu"],
+        "PythonScripts": [
+            "$HOME\\scoop\\apps\\python\\current\\install-pep-514.reg",
+            "python.exe -m pip install --upgrade pip"
+        ],
+        "ExternalLinks": [
+            "https://www.mathworks.com/products/matlab.html",
+            "https://www.analog.com/en/design-center/design-tools-and-calculators/ltspice-simulator.html"
+        ]
+    },
+    "Games": {
+        "Scoop": ["playnite", "battlenet", "steam", "ubisoftconnect", "nvidia-profile-inspector"],
+        "Winget": ["ElectronicArts.EADesktop", "Logitech.GHUB", "Nvidia.GeForceExperience", "RiotGames.Valorant.EU"],
+        "Extra": ["epic-games-launcher"],
+        "ExternalLinks": ["https://www.duckychannel.com.tw/en/support"]
+    }
+}

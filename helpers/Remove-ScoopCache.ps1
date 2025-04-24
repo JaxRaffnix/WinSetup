@@ -20,7 +20,7 @@ function Remove-ScoopCache {
         gsudo scoop cleanup *
 
         scoop checkup
-        Write-Host "Scoop cache removed and cleanup completed." -ForegroundColor Green
+        # Write-Host "Scoop cache removed and cleanup completed." -ForegroundColor Green    # Scoop already shows a green message when the command is successful
     } catch {
         Write-Error "An error occurred while cleaning Scoop: $_"
     }

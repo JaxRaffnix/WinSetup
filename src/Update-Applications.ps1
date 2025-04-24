@@ -1,24 +1,26 @@
 function Update-Applications {
     <#
     .SYNOPSIS
-        Updates software using Winget and Scoop package managers.
+        Automates the process of updating software using Winget and Scoop package managers.
 
     .DESCRIPTION
-        This script automates the process of updating software on a Windows system. 
-        It uses Winget to update all installed packages and Scoop to update its apps and clear its cache.
-
+        This script updates installed applications with winget and Scoop. 
+        
     .PARAMETER UseWinget
-        Updates software using the Winget package manager.
+        Updates apps from winget.
 
     .PARAMETER UseScoop
-        Updates software using the Scoop package manager.
+        Updates apps from Scop.
 
     .PARAMETER All
-        Updates software using both Winget and Scoop.
-
+        Updates all installed software using both Winget and Scoop package manager.
     .EXAMPLE
-        Update-Applications -UseWinget -UseScoop
-        Runs the software update process using both Winget and Scoop. Identical to 'Update-Applications -All'.
+        Update-Applications -All
+        Updates all installed software using both Winget and Scoop package managers.
+
+    .NOTES
+        Ensure that both Winget and Scoop are installed and properly configured on your system before running this script.
+        Administrator privileges are called with 'gsudo'.
     #>
 
     [CmdletBinding()]
@@ -35,7 +37,7 @@ function Update-Applications {
 
     if (-not ($UseWinget -or $UseScoop)) {
         Write-Error "At least one switch parameter (-UseWinget, -UseScoop, or -All) must be specified."
-        return -1
+        return 1
     }
 
     Test-Installation -App 'winget'
@@ -43,7 +45,7 @@ function Update-Applications {
     Test-Installation -App 'gsudo'
 
     Write-Host "Starting software update process..." -ForegroundColor Cyan
-    Write-Warning "Please make sure common apps are closed before running this script. This includes browsers, IDE, terminals, powertoys, etc."
+    Write-Warning "Please make sure common apps are closed before running this script. This includes browsers, IDE, terminals, startup apps, etc."
     
     try {
         if ($UseScoop) {

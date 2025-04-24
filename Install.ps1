@@ -1,37 +1,69 @@
 <#
 .SYNOPSIS
-Installs this module into the user's PowerShell module path.
+Installs the current PowerShell module into the user's module path.
 
 .DESCRIPTION
-Copies the current folder (the module folder) to the user's module path under
-$env:USERPROFILE\Documents\PowerShell\Modules, overwriting if needed.
-Then imports the module to make it available immediately.
+This script automates the installation of a PowerShell module by copying the current folder to the user's module path located at 
+'$env:USERPROFILE\Documents\PowerShell\Modules'. If a module with the same name already exists, 
+it will be overwritten. After copying, the module is imported to make it immediately available 
+for use in the current session.
+
+.NOTES
+- Ensure this script is run from the module folder.
+
+.EXAMPLE
+.\Install.ps1
+This command installs the module located in the current folder into the user's PowerShell 
+module path and imports it into the current session.
 #>
 
+# Define variables
 $ModuleName = Split-Path -Leaf $PSScriptRoot
-$UserModulesPath = "$env:USERPROFILE\Documents\PowerShell\Modules"
+$UserModulesPath = Join-Path -Path $env:USERPROFILE -ChildPath "Documents\PowerShell\Modules"
 $TargetPath = Join-Path -Path $UserModulesPath -ChildPath $ModuleName
+
+Write-Host "Installing module '$ModuleName' to '$TargetPath'..." -ForegroundColor Cyan
 
 # Remove the existing module folder if it exists
 if (Test-Path $TargetPath) {
-    Write-Host "Removing existing module at '$TargetPath'..."
-    Remove-Item -Path $TargetPath -Recurse -Force
+    try {
+        Remove-Item -Path $TargetPath -Recurse -Force -ErrorAction Stop
+        
+        Write-Host "Removed existing module at '$TargetPath'."
+    } catch {
+        Write-Error "Failed to remove existing module folder: $_"
+        exit 1
+    }
 }
 
-Write-Host "Installing module '$ModuleName' to '$TargetPath'..."
 # Create target path if it doesn't exist
 if (-not (Test-Path $TargetPath)) {
-    New-Item -ItemType Directory -Path $TargetPath -Force | Out-Null
+    try {
+        New-Item -ItemType Directory -Path $TargetPath -Force | Out-Null
+
+    } catch {
+        Write-Error "Failed to create target directory: $_"
+        exit 1
+    }
 }
 
 # Copy all files from this folder to the user module path
-Copy-Item -Path "$PSScriptRoot\*" -Destination $TargetPath -Recurse -Force
+try {
+    Copy-Item -Path "$PSScriptRoot\*" -Destination $TargetPath -Recurse -Force -ErrorAction Stop
+
+    Write-Host "Copied Module to '$TargetPath'."
+} catch {
+    Write-Error "Failed to copy module files: $_"
+    exit 1
+}
 
 # Import the module
 try {
-    $env:PSModulePath += ";$UserModulesPath"    #Update the Environment variable to include the new module path
+    $env:PSModulePath += ";$UserModulesPath"  # Update the environment variable to include the new module path
     Import-Module $ModuleName -Force -ErrorAction Stop
+
     Write-Host "Module '$ModuleName' installed and imported successfully." -ForegroundColor Green
 } catch {
     Write-Error "Failed to import module '$ModuleName': $_"
+    exit 1
 }

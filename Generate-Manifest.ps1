@@ -15,5 +15,6 @@ New-ModuleManifest -Path .\WinSetup.psd1 `
         'Set-GitConfiguration'
         'Set-WindowsConfiguration'
         'Set-WallpaperAndLockScreen'
+        'Test-SystemIntegrity'
         'Update-Applications'
     )

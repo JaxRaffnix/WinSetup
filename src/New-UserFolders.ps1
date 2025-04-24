@@ -95,7 +95,7 @@ function Add-Shortcut {
 
             if ($existingShortcut.TargetPath -eq $TargetPath) {
                 Write-Warning "Shortcut already exists and points to the correct target: $shortcutPath"
-                return
+                return 1
             } else {
                 Write-Warning "Shortcut exists but points to a different target. Overwriting: $shortcutPath"
             }
