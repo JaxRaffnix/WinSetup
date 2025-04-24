@@ -1,0 +1,10 @@
+{
+    "Helper": {
+        "Winget": [
+            "Git.Git",
+            "M2Team.NanaZip",
+            "gerardog.gsudo",
+            "Microsoft.NuGet"
+        ]
+    }
+}

@@ -1,20 +1,42 @@
 {
     "Core": {
-        "Scoop": ["vscode", "powertoys", "keepassxc", "restic", "obsidian", "googlechrome", "mathpix"],
-        "Winget": ["Microsoft.WindowsTerminal", "Spotify.Spotify", "Google.GoogleDrive"],
+        "Winget": [
+            "Microsoft.VisualStudioCode",
+            "Microsoft.PowerToys",
+            "KeePassXCTeam.KeePassXC",
+            "Restic.Restic",
+            "Obsidian.Obsidian",
+            "Google.Chrome",
+            "Mathpix.MathpixSnippingTool",
+            "Microsoft.WindowsTerminal",
+            "Spotify.Spotify",
+            "Google.Drive"
+        ],
         "Scripts": [
             "$HOME\\scoop\\apps\\powertoys\\current\\install-context.ps1",
             "$HOME\\scoop\\apps\\vscode\\current\\install-context.reg",
             "$HOME\\scoop\\apps\\vscode\\current\\install-associations.reg",
-            "$HOME\\scoop\\apps\\vscode\\current\\install-github-integration.reg"
+            "$HOME\\scoop\\apps\\vscode\\current\\install-github-integration.reg",
+            "sudo Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted",
+            "gsudo Install-Module PSScriptTools"
         ]
     },
     "Messengers": {
-        "Scoop": ["discord", "signal", "thunderbird"],
-        "Winget": ["9NKSQGP7F2NH"]
+        "Winget": [
+            "Discord.Discord",
+            "OpenWhisperSystems.Signal",
+            "Mozilla.Thunderbird"
+        ]
     },
     "ProgrammingTools": {
-        "Scoop": ["gcc", "inkscape", "miktex", "perl", "python", "rufus", "pdfcpu"],
+        "Winget": [
+            "Inkscape.Inkscape",
+            "MiKTeX.MiKTeX",
+            "StrawberryPerl.StrawberryPerl",
+            "Python.Python.3",
+            "Rufus.Rufus",
+            "PDFCPU.PDFCPU"
+        ],
         "Scripts": [
             "$HOME\\scoop\\apps\\python\\current\\install-pep-514.reg",
             "python.exe -m pip install --upgrade pip"
@@ -25,9 +47,18 @@
         ]
     },
     "Games": {
-        "Scoop": ["playnite", "battlenet", "steam", "ubisoftconnect", "nvidia-profile-inspector"],
-        "Winget": ["ElectronicArts.EADesktop", "Logitech.GHUB", "Nvidia.GeForceExperience", "RiotGames.Valorant.EU"],
-        "Extra": ["epic-games-launcher"],
+        "Winget": [
+            "Playnite.Playnite",
+            "Blizzard.BattleNet",
+            "Valve.Steam",
+            "Ubisoft.Connect",
+            "Orbmu2k.NvidiaProfileInspector",
+            "ElectronicArts.EADesktop",
+            "Logitech.GHUB",
+            "NVIDIA.GeForceExperience",
+            "RiotGames.Valorant",
+            "EpicGames.EpicGamesLauncher"
+        ],
         "ExternalLinks": ["https://www.duckychannel.com.tw/en/support"]
     }
 }

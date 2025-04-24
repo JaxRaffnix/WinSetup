@@ -57,19 +57,13 @@ function Install-Applications {
     $Applications = Get-Content -Path $AppsFile | ConvertFrom-Json
 
     # Ensure required tools are installed
-    Test-Installation -App 'winget'
-    Test-Installation -App 'scoop'
     Test-Installation -App 'gsudo'
 
-    Update-Applications -UseScoop
+    Update-Applications
 
     # Install selected categories
     if ($Core) {
         Write-Host "Installing core applications..." -ForegroundColor Cyan
-
-        foreach ($app in $Applications.Core.Scoop) {
-            Install-WithScoop $app
-        }
 
         foreach ($script in $Applications.Core.Scripts) {
             & $script
@@ -78,17 +72,10 @@ function Install-Applications {
         foreach ($app in $Applications.Core.Winget) {
             Install-WithWinget $app
         }
-
-        gsudo Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted
-        gsudo Install-Module PSScriptTools
     }
 
     if ($Messengers) {
         Write-Host "Installing messengers..." -ForegroundColor Cyan
-
-        foreach ($app in $Applications.Messengers.Scoop) {
-            Install-WithScoop $app
-        }
 
         foreach ($app in $Applications.Messengers.Winget) {
             Install-WithWinget $app
@@ -97,10 +84,6 @@ function Install-Applications {
 
     if ($ProgrammingTools) {
         Write-Host "Installing programming tools..." -ForegroundColor Cyan
-
-        foreach ($app in $Applications.ProgrammingTools.Scoop) {
-            Install-WithScoop $app
-        }
 
         foreach ($script in $Applications.ProgrammingTools.Scripts) {
             & $script
@@ -116,10 +99,6 @@ function Install-Applications {
 
         Install-ScoopBucket games
 
-        foreach ($app in $Applications.Games.Scoop) {
-            Install-WithScoop $app
-        }
-
         foreach ($app in $Applications.Games.Extra) {
             gsudo scoop install $app
         }
@@ -134,12 +113,9 @@ function Install-Applications {
     }
 
     # Update software repositories
-    Update-Applications -All
+    Update-Applications 
 
     Write-Host "Finished app install process." -ForegroundColor Green
-
-    # Clean up Scoop cache
-    Remove-ScoopCache
 }
 
 
@@ -156,8 +132,6 @@ function Install-MSOffice {
         Write-Error "Configuration file not found at $ConfigLocation."
         return 1
     }
-
-    Test-Installation -App 'winget'
 
     Install-WithWinget Microsoft.OfficeDeploymentTool
     Set-Location "C:\Program Files\OfficeDeploymentTool";  .\setup.exe /configure "$ConfigLocation"
