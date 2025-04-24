@@ -6,16 +6,8 @@ function Update-Applications {
     .DESCRIPTION
         This script updates installed applications with winget and Scoop. 
         
-    .PARAMETER UseWinget
-        Updates apps from winget.
-
-    .PARAMETER UseScoop
-        Updates apps from Scop.
-
-    .PARAMETER All
-        Updates all installed software using both Winget and Scoop package manager.
     .EXAMPLE
-        Update-Applications -All
+        Update-Applications
         Updates all installed software using both Winget and Scoop package managers.
 
     .NOTES
