@@ -1,3 +1,7 @@
+. $PSScriptRoot\Install-ScoopBucket.ps1
+. $PSScriptRoot\Install-WithScoop.ps1
+. $PSScriptRoot\Install-WithWinget.ps1
+
 function Install-Scoop {
     <#
     .SYNOPSIS
@@ -34,25 +38,13 @@ function Install-Scoop {
 
     Write-Host "Installing Scoop and helper applications..." -ForegroundColor Cyan
 
-    # Elevate privileges
-    if (-not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) {
-        Write-Host "This script needs to be run as an administrator. Restarting with elevated privileges..."
-        Start-Process powershell.exe "-File $PSCommandPath" -Verb RunAs
-        exit
-    }
-
-    # Fix untrusted script execution
-    if ((Get-ExecutionPolicy) -ne "RemoteSigned") {
-        Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned -Force
-        Write-Host "Execution Policy has been set to RemoteSigned."
-    }
-
     # Install Scoop
-    if (-not (Get-Command scoop -ErrorAction SilentlyContinue)) {
+    if ((Get-Command scoop -ErrorAction SilentlyContinue)) {
+        Write-Warning "Scoop is already installed."
+        # return 
+    } else {
         Invoke-Expression (New-Object System.Net.WebClient).DownloadString('https://get.scoop.sh')
         Write-Host "Scoop installed successfully."
-    } else {
-        Write-Host "Scoop is already installed."
     }
 
     # Install helper Scoop apps
@@ -68,7 +60,11 @@ function Install-Scoop {
         Install-WithWinget -App $app
     }
 
-    Update-Applications -All
+    # Update-Applications -All
 
     Write-Host "Scoop and helper applications installed successfully." -ForegroundColor Green
 }
+
+# Write-Host "You are here!"
+
+Install-Scoop

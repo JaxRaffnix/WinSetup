@@ -4,7 +4,9 @@ function Install-WithScoop {
         [string]$App
     )
 
-    $Result = Invoke-CommandWithLogging -Command "scoop install $app" -SkipOnError
+    $Result = Invoke-Expression "scoop install $app"
+
+    
 
     if ($result.Output -match "is already installed"){ 
         Write-Warning "Already installed $app."

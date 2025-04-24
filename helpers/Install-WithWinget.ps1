@@ -11,7 +11,7 @@ function Install-WithWinget {
         "Installer failed with exit code: 29"
     )
 
-    $Result = Invoke-CommandWithLogging -Command "winget install -e --id $App --silent --accept-source-agreements --accept-package-agreements --disable-interactivity --force" -SkipOnError
+    $Result = Invoke-Expression -Command "winget install -e --id $App --silent --accept-source-agreements --accept-package-agreements --disable-interactivity --force"
 
     if ($Result.Errors) {
         if ($alreadyInstalledMessages | Where-Object { $Result.Output -match $_ }) {

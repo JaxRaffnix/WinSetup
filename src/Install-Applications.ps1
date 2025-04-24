@@ -71,10 +71,8 @@ function Install-Applications {
             Install-WithScoop $app
         }
 
-        foreach ($script in $Applications.Core.ContextScripts) {
-            if (Test-Path $script) {
-                & $script
-            }
+        foreach ($script in $Applications.Core.Scripts) {
+            & $script
         }
 
         foreach ($app in $Applications.Core.Winget) {
@@ -104,10 +102,8 @@ function Install-Applications {
             Install-WithScoop $app
         }
 
-        foreach ($script in $Applications.ProgrammingTools.PythonScripts) {
-            if (Test-Path $script -or $script -match 'python.exe') {
-                & $script
-            }
+        foreach ($script in $Applications.ProgrammingTools.Scripts) {
+            & $script
         }
 
         foreach ($link in $Applications.ProgrammingTools.ExternalLinks) {

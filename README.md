@@ -53,12 +53,16 @@ A PowerShell module designed to streamline the process of configuring Windows en
 Run the following commands to set up a default configuration:
 
 ```powershell
+# Remember evelated credentials in cache, results in less pop ups
+gsudo cache on
+
 # Create user folders and shortcuts
-New-UserFolders -Folders @("Workspace", "Workspace\Temp", "Coding") -CreateShortcuts -PinToQuickAccess
+New-UserFolders -Folders @("Workspace", "Coding") -CreateShortcuts -PinToQuickAccess
+New-UserFolders -Folders @("Workspace\Temp")
 
 # Apply system-wide configurations
 Set-WindowsConfiguration -All
-Set-WallpaperAndLockScreen -WallpaperPath "C:\Images\wallpaper.jpg" -LockScreenPath "C:\Images\lockscreen.jpg"
+Set-WallpaperAndLockScreen -WallpaperPath "$projectRoot\assets\wallpaper.jpg" -LockScreenPath "$projectRoot\assets\wallpaper.jpg"
 
 # Install applications
 Install-Applications -Core -Messengers -ProgrammingTools -Games

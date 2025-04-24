@@ -4,7 +4,7 @@ function Install-ScoopBucket {
     )
 
     # Write-Log "Installing Scoop bucket $bucket..."
-    $Result = Invoke-CommandWithLogging -Command "scoop bucket add $bucket" -SkipOnError 
+    $Result = Invoke-Expression "scoop bucket add $bucket"
     
     if ($Result.Errors) {
         if ($Result.Output -match "bucket already exists") {

@@ -2,7 +2,7 @@
     "Core": {
         "Scoop": ["vscode", "powertoys", "keepassxc", "restic", "obsidian", "googlechrome", "mathpix"],
         "Winget": ["Microsoft.WindowsTerminal", "Spotify.Spotify", "Google.GoogleDrive"],
-        "ContextScripts": [
+        "Scripts": [
             "$HOME\\scoop\\apps\\powertoys\\current\\install-context.ps1",
             "$HOME\\scoop\\apps\\vscode\\current\\install-context.reg",
             "$HOME\\scoop\\apps\\vscode\\current\\install-associations.reg",
@@ -15,7 +15,7 @@
     },
     "ProgrammingTools": {
         "Scoop": ["gcc", "inkscape", "miktex", "perl", "python", "rufus", "pdfcpu"],
-        "PythonScripts": [
+        "Scripts": [
             "$HOME\\scoop\\apps\\python\\current\\install-pep-514.reg",
             "python.exe -m pip install --upgrade pip"
         ],

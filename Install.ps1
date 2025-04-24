@@ -17,6 +17,19 @@ This command installs the module located in the current folder into the user's P
 module path and imports it into the current session.
 #>
 
+# Elevate privileges
+if (-not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) {
+    Write-Warning "This script needs to be run as an administrator. Restarting with elevated privileges..."
+    Start-Process powershell.exe "-NoExit -File $PSCommandPath" -Verb RunAs
+    exit
+}
+
+# Fix untrusted script execution
+if ((Get-ExecutionPolicy) -ne "RemoteSigned") {
+    Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned -Force
+    Write-Host "Execution Policy has been set to RemoteSigned."
+}
+
 # Define variables
 $ModuleName = Split-Path -Leaf $PSScriptRoot
 $UserModulesPath = Join-Path -Path $env:USERPROFILE -ChildPath "Documents\PowerShell\Modules"
@@ -41,6 +54,7 @@ if (-not (Test-Path $TargetPath)) {
     try {
         New-Item -ItemType Directory -Path $TargetPath -Force | Out-Null
 
+        Write-Host "Created target directory '$TargetPath'."
     } catch {
         Write-Error "Failed to create target directory: $_"
         exit 1
