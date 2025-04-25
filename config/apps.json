@@ -25,7 +25,8 @@
         "Winget": [
             "Discord.Discord",
             "OpenWhisperSystems.Signal",
-            "Mozilla.Thunderbird"
+            "Mozilla.Thunderbird",
+            "9NKSQGP7F2NH"
         ]
     },
     "ProgrammingTools": {
