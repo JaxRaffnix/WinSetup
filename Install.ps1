@@ -25,14 +25,24 @@ if (-not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 }
 
 # Fix untrusted script execution
-if ((Get-ExecutionPolicy) -ne "RemoteSigned") {
-    Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned -Force
-    Write-Host "Execution Policy has been set to RemoteSigned."
+$RequiredPolicy = "RemoteSigned"
+try {
+    $CurrentExecutionPolicy = Get-ExecutionPolicy -Scope CurrentUser
+    if ($CurrentExecutionPolicy -ne $RequiredPolicy) {
+        Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy $RequiredPolicy -Force
+
+        Write-Host "Execution Policy has been set to '$RequiredPolicy' for the current user."
+    } 
+    # else {
+    #     Write-Host "Execution Policy is already set to '$CurrentExecutionPolicy' for the current user."
+    # }
+} catch {
+    Write-Error "Failed to set execution policy: $_"
 }
 
-# Define variables
+# Define Module name and paths
 $ModuleName = "WinSetup"
-$ModulePath = $PSScriptRoot
+$ModulePath = $PSScriptRoot # The path of the current script folder
 $UserModulesPath = Join-Path -Path $env:USERPROFILE -ChildPath "Documents\PowerShell\Modules"
 $TargetPath = Join-Path -Path $UserModulesPath -ChildPath $ModuleName
 
@@ -46,7 +56,6 @@ if (Get-Module -Name $ModuleName -ListAvailable) {
         Write-Host "Removed loaded module '$ModuleName' from the current session."
     } catch {
         Write-Error "Failed to remove loaded module '$ModuleName': $_"
-        exit 1
     }
 }
 
@@ -58,7 +67,6 @@ if (Test-Path $TargetPath) {
         Write-Host "Removed existing module files at: $TargetPath."
     } catch {
         Write-Error "Failed to remove existing module: $_"
-        exit 1
     }
 }
 
@@ -70,18 +78,19 @@ if (-not (Test-Path $TargetPath)) {
         Write-Host "Created target directory '$TargetPath'."
     } catch {
         Write-Error "Failed to create target directory: $_"
-        exit 1
     }
+} else {
+    # this should never happen, because we removed it above
+    Throw "Target directory '$TargetPath' already exists."
 }
 
 # Copy all files from this folder to the user module path
 try {
-    Copy-Item -Path $ModulePath -Destination $TargetPath -Recurse -Force -ErrorAction Stop
+    Copy-Item -Path "$ModulePath\*" -Destination $TargetPath -Recurse -Force -ErrorAction Stop
 
     Write-Host "Copied Module from '$ModulePath' to '$TargetPath'."
 } catch {
     Write-Error "Failed to copy module files: $_"
-    exit 1
 }
 
 # Import the module
@@ -89,8 +98,7 @@ try {
     $env:PSModulePath += ";$UserModulesPath"  # Update the environment variable to include the new module path
     Import-Module $ModuleName -Force -ErrorAction Stop
 
-    Write-Host "Module '$ModuleName' installed and imported successfully." -ForegroundColor Green
+    Write-Host "Module '$ModuleName' installed successfully." -ForegroundColor Green
 } catch {
     Write-Error "Failed to import module '$ModuleName': $_"
-    exit 1
 }

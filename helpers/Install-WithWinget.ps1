@@ -29,15 +29,17 @@ function Install-WithWinget {
         [string]$App
     )
 
-    Test-Installation -App "Wingget"
+    Test-Installation -App "Winget"
+
+    Write-Host "Installing '$App' using Winget..."
 
     try {
-        $Result = winget install -e --id $App --silent --accept-source-agreements --accept-package-agreements --disable-interactivity --force 2>&1
+        $Result = winget install -e --id $App --silent --accept-source-agreements --accept-package-agreements --disable-interactivity --force 
 
         if ($alreadyInstalledMessages | Where-Object { $Result -match $_ }) {
             Write-Warning "The application '$App' is already installed."
         } elseif ($Result -match "Successfully installed") {
-            # Write-Host "Successfully installed '$App'." -ForegroundColor Green
+            Write-Host "Successfully installed '$App'."
             Out-Null
         } else {
             Write-Error "Failed to install '$App'. Output: $Result"

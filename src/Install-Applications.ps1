@@ -32,7 +32,8 @@ function Install-Applications {
         [switch]$Games,
         [switch]$Messengers,
         [switch]$ProgrammingTools,
-        [switch]$All
+        [switch]$All,
+        [string]$ConfigLocation = (Join-Path -Path $PSScriptRoot -ChildPath '..\config\apps.json')
     )
 
     # Enable all categories if -All is specified
@@ -44,72 +45,22 @@ function Install-Applications {
     }
 
     if (-not ($Core -or $Games -or $Messengers -or $ProgrammingTools)) {
-        Write-Error "Please specify at least one category to install."
-        return 1
+        Throw "No categories specified. Use -Core, -Games, -Messengers, or -ProgrammingTools to specify categories."
     }
-
-    # Load applications from JSON file
-    $AppsFile = "$PSScriptRoot\config\apps.json"
-    if (-not (Test-Path $AppsFile)) {
-        Write-Error "Applications file not found at $AppsFile."
-        return 1
-    }
-    $Applications = Get-Content -Path $AppsFile | ConvertFrom-Json
-
-    # Ensure required tools are installed
-    Test-Installation -App 'gsudo'
 
     Update-Applications
 
-    # Install selected categories
     if ($Core) {
-        Write-Host "Installing core applications..." -ForegroundColor Cyan
-
-        foreach ($script in $Applications.Core.Scripts) {
-            & $script
-        }
-
-        foreach ($app in $Applications.Core.Winget) {
-            Install-WithWinget $app
-        }
+        Install-Category -Category 'Core' -ConfigLocation $ConfigLocation
     }
-
-    if ($Messengers) {
-        Write-Host "Installing messengers..." -ForegroundColor Cyan
-
-        foreach ($app in $Applications.Messengers.Winget) {
-            Install-WithWinget $app
-        }
-    }
-
-    if ($ProgrammingTools) {
-        Write-Host "Installing programming tools..." -ForegroundColor Cyan
-
-        foreach ($script in $Applications.ProgrammingTools.Scripts) {
-            & $script
-        }
-
-        foreach ($link in $Applications.ProgrammingTools.ExternalLinks) {
-            Start-Process $link
-        }
-    }
-
     if ($Games) {
-        Write-Host "Installing games..." -ForegroundColor Cyan
-
-        Install-ScoopBucket games
-
-        foreach ($app in $Applications.Games.Extra) {
-            gsudo scoop install $app
-        }
-
-        foreach ($app in $Applications.Games.Winget) {
-            Install-WithWinget $app
-        }
-
-        foreach ($link in $Applications.Games.ExternalLinks) {
-            Start-Process $link
-        }
+        Install-Category -Category 'Games' -ConfigLocation $ConfigLocation
+    }
+    if ($Messengers) {
+        Install-Category -Category 'Messengers' -ConfigLocation $ConfigLocation
+    }
+    if ($ProgrammingTools) {
+        Install-Category -Category 'ProgrammingTools' -ConfigLocation $ConfigLocation
     }
 
     # Update software repositories
@@ -129,8 +80,7 @@ function Install-MSOffice {
     )
 
     if (-not (Test-Path $ConfigLocation)) {
-        Write-Error "Configuration file not found at $ConfigLocation."
-        return 1
+        Throw "Configuration file not found at $ConfigLocation."
     }
 
     Install-WithWinget Microsoft.OfficeDeploymentTool

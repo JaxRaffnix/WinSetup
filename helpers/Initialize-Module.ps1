@@ -1,4 +1,5 @@
-. $PSScriptRoot\Install-WithWinget.ps1
+# load required modules
+. $PSScriptRoot\Install-Category.ps1
 
 function Initialize-Module {
     <#
@@ -15,24 +16,22 @@ function Initialize-Module {
 
     [CmdletBinding()]
     param (
-        [string]$initFilePath = (Join-Path -Path $PSScriptRoot -ChildPath 'config\init.json')
+        [[ValidateScript({ Test-Path $_ -PathType Leaf })]]
+        [string]$ConfigLocation = (Join-Path -Path $PSScriptRoot -ChildPath '..\config\init.json')
     )
 
-   
 
-    if (-not (Test-Path $initFilePath)) {
-        Write-Error "init.json file not found at $initFilePath. Please ensure the file exists."
-        return
+    if (-not (Test-Path $ConfigLocation)) {
+        Throw "init.json file not found at $ConfigLocation. Please ensure the file exists."
     }
 
-    Write-Host "Reading init.json file..." -ForegroundColor Cyan
-    $initData = Get-Content -Path $initFilePath -Raw | ConvertFrom-Json
+    Write-Host "Initializing module with config location '$ConfigLocation' ..." -ForegroundColor Cyan
 
-    foreach ($app in $initData.apps) {
-        Install-WithWinget $app
+    try {  
+        Install-Category -Category 'Initialize' -ConfigLocation $ConfigLocation
+
+        Write-Host "All applications installed successfully." -ForegroundColor Green
+    } catch {
+        Write-Error "Failed to install applications: $_"
     }
-
-    Write-Host "All applications installed successfully." -ForegroundColor Green
 }
-
-Initialize-Module

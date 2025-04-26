@@ -53,8 +53,7 @@ function Test-SystemIntegrity {
     }
 
     if (-not ($SystemHealth -or $StorageHealth -or $Cleanup)) {
-        Write-Error "No checks selected. Use -SystemHealth, -StorageHealth, -Cleanup, or -All."
-        return 1
+        Throw "No checks selected. Use -SystemHealth, -StorageHealth, -Cleanup, or -All."
     }
 
     # Ensure required tools are installed
