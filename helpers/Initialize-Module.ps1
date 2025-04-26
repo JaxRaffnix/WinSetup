@@ -1,5 +1,6 @@
 # load required modules
 . $PSScriptRoot\Install-Category.ps1
+. $PSScriptRoot\Install-WithWinget.ps1
 
 function Initialize-Module {
     <#
@@ -16,7 +17,6 @@ function Initialize-Module {
 
     [CmdletBinding()]
     param (
-        [[ValidateScript({ Test-Path $_ -PathType Leaf })]]
         [string]$ConfigLocation = (Join-Path -Path $PSScriptRoot -ChildPath '..\config\init.json')
     )
 

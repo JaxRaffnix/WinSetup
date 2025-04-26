@@ -23,18 +23,19 @@ function Install-Category {
         Throw "No '$Category' found in '$ConfigLocation'."
     }
 
-    Write-Host "Installing $Category applications from '$ConfigLocation'..." -ForegroundColor Cyan
+    Write-Host "Installing apps with category $Category from '$ConfigLocation'..." -ForegroundColor Cyan
 
     $SubCategories = $Applications.$Category.PSObject.Properties.Name
 
+
     switch ($SubCategories) {
         'Winget' {
-            foreach ($app in $Applications.Core.Winget) {
+            foreach ($app in $Applications.$SubCategories.Winget) {
                 Install-WithWinget $app
             }
         }
         'Scripts' {
-            foreach ($script in $Applications.Core.Scripts) {
+            foreach ($script in $Applications.$SubCategories.Scripts) {
                 try {
                     & $script
 
@@ -45,9 +46,11 @@ function Install-Category {
             }
         }
         'Modules' {
-            foreach ($module in $Applications.Core.Modules) {
+            Test-Installation -App 'gsudo'
+            foreach ($module in $Applications.$SubCategories.Modules) {
                 try {
                     gsudo Install-Module -Name $module -Force -Scope CurrentUser -AllowClobber
+                    Import-Module -Name $module -Force -Scope CurrentUser -ErrorAction Stop
 
                     Write-Host "Installed PowerShell module: $module"
                 } catch {
@@ -56,7 +59,7 @@ function Install-Category {
             }
         }
         'ExternalLinks' {
-            foreach ($link in $Applications.Core.ExternalLinks) {
+            foreach ($link in $Applications.$SubCategories.ExternalLinks) {
                 Write-Host "Opening external link: $link"
                 Start-Process $link
             }

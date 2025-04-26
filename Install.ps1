@@ -46,16 +46,16 @@ $ModulePath = $PSScriptRoot # The path of the current script folder
 $UserModulesPath = Join-Path -Path $env:USERPROFILE -ChildPath "Documents\PowerShell\Modules"
 $TargetPath = Join-Path -Path $UserModulesPath -ChildPath $ModuleName
 
-Write-Host "Installing module '$ModuleName' from '$ModulePath' to '$TargetPath'..." -ForegroundColor Cyan
+Write-Host "Installing module $ModuleName from '$ModulePath' to '$TargetPath'..." -ForegroundColor Cyan
 
 # Check if the module is already loaded and remove it
 if (Get-Module -Name $ModuleName -ListAvailable) {
     try {
         Remove-Module -Name $ModuleName -Force -ErrorAction Stop
 
-        Write-Host "Removed loaded module '$ModuleName' from the current session."
+        Write-Host "Removed loaded module $ModuleName from the current session."
     } catch {
-        Write-Error "Failed to remove loaded module '$ModuleName': $_"
+        Write-Error "Failed to remove loaded module $ModuleName : $_"
     }
 }
 
@@ -64,7 +64,7 @@ if (Test-Path $TargetPath) {
     try {
         Remove-Item -Path $TargetPath -Recurse -Force -ErrorAction Stop
         
-        Write-Host "Removed existing module files at: $TargetPath."
+        Write-Host "Removed existing module files at: '$TargetPath'."
     } catch {
         Write-Error "Failed to remove existing module: $_"
     }

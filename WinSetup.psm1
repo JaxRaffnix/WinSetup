@@ -22,5 +22,5 @@ try {
 
     Write-Host "Module $ModuleName imported successfully." -ForegroundColor Green
 } catch {
-    Write-Error "Failed to import module $ModuleName: $_"
+    Write-Error "Failed to import module $ModuleName : $_"
 }

@@ -4,11 +4,16 @@
             "Git.Git",
             "gerardog.gsudo",
             "Microsoft.NuGet"
+        ],
+        "Scripts":[
+            "gsudo Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted"
         ]
     },
     "Core": {
         "Modules": [
-            "PSScriptTools"
+            "PSScriptTools",
+            "Terminal-Icons",
+            "PSReadLine "
         ],
         "Winget": [
             "M2Team.NanaZip",
@@ -28,8 +33,7 @@
             "$HOME\\scoop\\apps\\powertoys\\current\\install-context.ps1",
             "$HOME\\scoop\\apps\\vscode\\current\\install-context.reg",
             "$HOME\\scoop\\apps\\vscode\\current\\install-associations.reg",
-            "$HOME\\scoop\\apps\\vscode\\current\\install-github-integration.reg",
-            "sudo Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted"
+            "$HOME\\scoop\\apps\\vscode\\current\\install-github-integration.reg"
         ]
     },
     "Messengers": {
