@@ -36,6 +36,9 @@ function Set-WindowsConfiguration {
     .PARAMETER EnableDeveloperMode
     Activates Windows Developer Mode, allowing the installation of unsigned apps and enabling advanced developer features.
 
+    .PARAMETER DisableEdgeTabsInAltTabView
+    Disables the display of Microsoft Edge tabs in the Alt+Tab view.
+
     .EXAMPLE
     Set-WindowsConfiguration -All
     Configures all available settings.
@@ -55,7 +58,8 @@ function Set-WindowsConfiguration {
         [switch]$ShowHiddenFiles,
         [switch]$ShowFileExtensions,
         [switch]$EnableLongPaths,
-        [switch]$EnableDeveloperMode
+        [switch]$EnableDeveloperMode,
+        [switch]$DisableEdgeTabsInAltTabView
     )
 
     # Enable all options if -All is specified
@@ -69,10 +73,11 @@ function Set-WindowsConfiguration {
         $ShowFileExtensions = $true
         $EnableLongPaths = $true
         $EnableDeveloperMode = $true
+        $DisableEdgeTabsInAltTabView = $true
     }
 
     # Validate if at least one option is selected
-    if (-not ($EnableClipboardSync -or $HideSearchIcon -or $EnableSearchIndex -or $EnableDarkMode -or $EnableFullPathInExplorer -or $ShowHiddenFiles -or $ShowFileExtensions -or $EnableLongPaths -or $EnableDeveloperMode)) {
+    if (-not ($EnableClipboardSync -or $HideSearchIcon -or $EnableSearchIndex -or $EnableDarkMode -or $EnableFullPathInExplorer -or $ShowHiddenFiles -or $ShowFileExtensions -or $EnableLongPaths -or $EnableDeveloperMode -or $DisableEdgeTabsInAltTabView)) {
         Write-Error "No configuration options were selected. Use -All or specify individual switches."
         return 1
     }
@@ -183,6 +188,43 @@ function Set-WindowsConfiguration {
             Write-Error "Failed to enable Developer Mode: $_"
         }
     }
+
+    # Disable Edge tabs in Alt+Tab view
+    if ($DisableEdgeTabsInAltTabView) {
+        try {
+            # Navigate to the registry key and set the property
+            Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "MultiTaskingAltTabFilter" -Value 3
+
+            Write-Host "Edge tabs in Alt+Tab view disabled successfully."
+        } catch {
+            Write-Error "Failed to disable Edge tabs in Alt+Tab view: $_"
+        }
+    }
+
+    if ($DisableWindowsFeedback) {
+        try {
+            gsudo Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DataCollection" -Name "AllowWindowsFeedback" -Value 0 -Force
+
+            Write-Host "Windows Feedback disabled successfully."
+        } catch {
+            Write-Error "Failed to disable Windows Feedback: $_"
+        }
+    }
+
+    # Disable Telemetry
+    if ($DisableTelemetry) {
+        try {
+            gsudo Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DataCollection" -Name "AllowTelemetry" -Value 0 -Force
+
+            Write-Host "Telemetry disabled successfully."
+        } catch {
+            Write-Error "Failed to disable Telemetry: $_"
+        }
+    }
+
+    # Restart Windows Explorer to apply changes
+    Stop-Process -Name explorer -Force
+    Start-Process explorer
 
     Write-Host "Windows configuration setup completed." -ForegroundColor Green
 }
