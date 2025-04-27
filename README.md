@@ -117,3 +117,15 @@ To regenerate the module's manifest file, run:
 
 ## Known Issues
 Winget also updates applications installed with Scoop. This results in a duplication issue, because winget runs the default app installer and doesnt touch the scoop/apps folder.
+
+Whatsapp is installed with ID `9NKSQGP7F2NH`, not with Meta.Whatsapp.
+
+## To Do
+Add gcc complier for c with winget
+
+
+add the following steps to enable posh terminal
+https://ohmyposh.dev/docs/installation/prompt
+
+add a font to posh
+https://ohmyposh.dev/docs/installation/fonts

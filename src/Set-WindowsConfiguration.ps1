@@ -77,9 +77,8 @@ function Set-WindowsConfiguration {
     }
 
     # Validate if at least one option is selected
-    if (-not ($EnableClipboardSync -or $HideSearchIcon -or $EnableSearchIndex -or $EnableDarkMode -or $EnableFullPathInExplorer -or $ShowHiddenFiles -or $ShowFileExtensions -or $EnableLongPaths -or $EnableDeveloperMode -or $DisableEdgeTabsInAltTabView)) {
-        Write-Error "No configuration options were selected. Use -All or specify individual switches."
-        return 1
+    if (-not ($EnableClipboardSync -or $HideSearchIcon -or $EnableSearchIndex -or $EnableDarkMode -or $EnableFullPathInExplorer -or $ShowHiddenFiles -or $ShowFileExtensions -or $EnableLongPaths -or $EnableDeveloperMode)) {
+        Throw "No configuration options were selected. Use -All or specify individual switches."
     }
 
     Test-Installation -App 'gsudo'

@@ -24,10 +24,9 @@ function Test-Installation {
         # Check if the application is available in the PATH
         Get-Command -Name $App -ErrorAction Stop | Out-Null
     } catch {
-        if ($App -eq 'scoop') {
-            Write-Error "Scoop is not installed. Please run 'Install-Scoop' to install it."
-        } else {
-            Write-Error "$App is not installed or not available in the PATH. Please install $App and try again."
+        if ($App -eq "winget") {
+            Write-Error "Winget is not installed. Please install Winget and try again."
         }
+            Write-Error "$App is not installed or not available in the PATH. Please install $App and try again."
     }
 }

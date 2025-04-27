@@ -1,7 +1,34 @@
 {
+    "Initialize": {
+        "Winget": [
+            "Git.Git",
+            "gerardog.gsudo",
+            "Microsoft.NuGet"
+        ],
+        "Scripts":[
+            "echo y |gsudo Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted"
+        ]
+    },
     "Core": {
-        "Scoop": ["vscode", "powertoys", "keepassxc", "restic", "obsidian", "googlechrome", "mathpix"],
-        "Winget": ["Microsoft.WindowsTerminal", "Spotify.Spotify", "Google.GoogleDrive"],
+        "Modules": [
+            "PSScriptTools",
+            "Terminal-Icons",
+            "PSReadLine "
+        ],
+        "Winget": [
+            "M2Team.NanaZip",
+            "Microsoft.VisualStudioCode",
+            "Microsoft.PowerToys",
+            "KeePassXCTeam.KeePassXC",
+            "Restic.Restic",
+            "Obsidian.Obsidian",
+            "Google.Chrome",
+            "Mathpix.MathpixSnippingTool",
+            "Microsoft.WindowsTerminal",
+            "Spotify.Spotify",
+            "Google.Drive",
+            "JanDeDobbeleer.OhMyPosh"
+        ],
         "Scripts": [
             "$HOME\\scoop\\apps\\powertoys\\current\\install-context.ps1",
             "$HOME\\scoop\\apps\\vscode\\current\\install-context.reg",
@@ -10,11 +37,22 @@
         ]
     },
     "Messengers": {
-        "Scoop": ["discord", "signal", "thunderbird"],
-        "Winget": ["9NKSQGP7F2NH"]
+        "Winget": [
+            "Discord.Discord",
+            "OpenWhisperSystems.Signal",
+            "Mozilla.Thunderbird",
+            "9NKSQGP7F2NH"
+        ]
     },
     "ProgrammingTools": {
-        "Scoop": ["gcc", "inkscape", "miktex", "perl", "python", "rufus", "pdfcpu"],
+        "Winget": [
+            "Inkscape.Inkscape",
+            "MiKTeX.MiKTeX",
+            "StrawberryPerl.StrawberryPerl",
+            "Python.Python.3",
+            "Rufus.Rufus",
+            "PDFCPU.PDFCPU"
+        ],
         "Scripts": [
             "$HOME\\scoop\\apps\\python\\current\\install-pep-514.reg",
             "python.exe -m pip install --upgrade pip"
@@ -25,9 +63,18 @@
         ]
     },
     "Games": {
-        "Scoop": ["playnite", "battlenet", "steam", "ubisoftconnect", "nvidia-profile-inspector"],
-        "Winget": ["ElectronicArts.EADesktop", "Logitech.GHUB", "Nvidia.GeForceExperience", "RiotGames.Valorant.EU"],
-        "Extra": ["epic-games-launcher"],
+        "Winget": [
+            "Playnite.Playnite",
+            "Blizzard.BattleNet",
+            "Valve.Steam",
+            "Ubisoft.Connect",
+            "Orbmu2k.NvidiaProfileInspector",
+            "ElectronicArts.EADesktop",
+            "Logitech.GHUB",
+            "NVIDIA.GeForceExperience",
+            "RiotGames.Valorant",
+            "EpicGames.EpicGamesLauncher"
+        ],
         "ExternalLinks": ["https://www.duckychannel.com.tw/en/support"]
     }
 }
