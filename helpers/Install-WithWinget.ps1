@@ -31,7 +31,7 @@ function Install-WithWinget {
 
     Test-Installation -App "Winget"
 
-    Write-Host "Installing '$App' using Winget..."
+    # Write-Host "Installing '$App' using Winget..."
 
     try {
         $Result = winget install -e --id $App --silent --accept-source-agreements --accept-package-agreements --disable-interactivity --force 

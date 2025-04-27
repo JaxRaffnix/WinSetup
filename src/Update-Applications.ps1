@@ -1,17 +1,17 @@
 function Update-Applications {
     <#
     .SYNOPSIS
-        Automates the process of updating software using Winget and Scoop package managers.
+        Automates the process of updating software using Winget package manager.
 
     .DESCRIPTION
-        This script updates installed applications with winget and Scoop. 
+        This script updates installed applications with winget. 
         
     .EXAMPLE
         Update-Applications
-        Updates all installed software using both Winget and Scoop package managers.
+        Updates all installed software using Winget package manager.
 
     .NOTES
-        Ensure that both Winget and Scoop are installed and properly configured on your system before running this script.
+        Ensure that Winget is installed and properly configured on your system before running this script.
         Administrator privileges are called with 'gsudo'.
     #>
 
@@ -24,6 +24,20 @@ function Update-Applications {
     
     try {
         winget upgrade --all --accept-package-agreements --accept-source-agreements --disable-interactivity --include-unknown --include-pinned --silent --force
+
+        # Get list of upgradeable packages
+        # $UpgradablePackages = winget upgrade --accept-package-agreements --accept-source-agreements | ForEach-Object {
+        #     if ($_ -match '^(.*?)\s+(.*?)\s+\S+\s+\S+\s+winget$') {
+        #         $matches[2] # Extract the package ID
+        #     }
+        # }
+
+        # # Upgrade each package explicitly
+        # foreach ($PackageId in $UpgradablePackages) {
+        #     Write-Host "Upgrading: $PackageId"
+        #     winget upgrade --id $PackageId --accept-package-agreements --accept-source-agreements --disable-interactivity --include-unknown --include-pinned --silent --force
+        # }
+
 
         Write-Host "Software update process completed successfully!" -ForegroundColor Green
     } catch {

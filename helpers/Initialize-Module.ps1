@@ -28,10 +28,10 @@ function Initialize-Module {
     Write-Host "Initializing module with config location '$ConfigLocation' ..." -ForegroundColor Cyan
 
     try {  
-        Install-Category -Category 'Initialize' -ConfigLocation $ConfigLocation
+        Install-Category -Category 'Initialize' -ConfigLocation $ConfigLocation -ErrorAction Stop
 
-        Write-Host "All applications installed successfully." -ForegroundColor Green
+        Write-Host "Module initialized successfully." -ForegroundColor Green
     } catch {
-        Write-Error "Failed to install applications: $_"
+        Write-Error "Failed to initialize module: $_"
     }
 }

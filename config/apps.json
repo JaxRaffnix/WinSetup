@@ -6,7 +6,7 @@
             "Microsoft.NuGet"
         ],
         "Scripts":[
-            "gsudo Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted"
+            "echo y |gsudo Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted"
         ]
     },
     "Core": {

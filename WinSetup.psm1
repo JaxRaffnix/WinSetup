@@ -18,7 +18,7 @@ foreach ($file in (Get-ChildItem -Path $SourceFolder -Filter '*.ps1')) {
 
 # Execute when the module is imported.
 try {
-    Initialize-Module -ConfigLocation "$ModulePath\config\apps.json"
+    Initialize-Module -ConfigLocation "$ModulePath\config\apps.json"  -ErrorAction Stop
 
     Write-Host "Module $ModuleName imported successfully." -ForegroundColor Green
 } catch {

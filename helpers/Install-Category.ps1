@@ -1,13 +1,10 @@
 function Install-Category {
-
-
     [CmdletBinding()]
     param (
         [Parameter(Mandatory = $true)]
         [string]$Category,
         [string]$ConfigLocation = (Join-Path -Path $PSScriptRoot -ChildPath '..\config\apps.json')
     )
-
 
     if (-not (Test-Path $ConfigLocation)) {
         Throw "Configuration file not found at $ConfigLocation."
@@ -23,51 +20,52 @@ function Install-Category {
         Throw "No '$Category' found in '$ConfigLocation'."
     }
 
-    Write-Host "Installing apps with category $Category from '$ConfigLocation'..." -ForegroundColor Cyan
+    Write-Host "Installing apps with category '$Category' from '$ConfigLocation'..." -ForegroundColor Cyan
 
     $SubCategories = $Applications.$Category.PSObject.Properties.Name
 
-
-    switch ($SubCategories) {
-        'Winget' {
-            foreach ($app in $Applications.$SubCategories.Winget) {
-                Install-WithWinget $app
-            }
-        }
-        'Scripts' {
-            foreach ($script in $Applications.$SubCategories.Scripts) {
-                try {
-                    & $script
-
-                    Write-Host "Executed script: $script"
-                } catch {
-                    Write-Error "Failed to resolve script path: $_"
+    foreach ($SubCategory in $SubCategories) {
+        Write-Host "Processing subcategory '$SubCategory'..." 
+        
+        switch ($SubCategory) {
+            "Winget" {
+                foreach ($app in $Applications.$Category.Winget) {
+                    Install-WithWinget $app
                 }
             }
-        }
-        'Modules' {
-            Test-Installation -App 'gsudo'
-            foreach ($module in $Applications.$SubCategories.Modules) {
-                try {
-                    gsudo Install-Module -Name $module -Force -Scope CurrentUser -AllowClobber
-                    Import-Module -Name $module -Force -Scope CurrentUser -ErrorAction Stop
-
-                    Write-Host "Installed PowerShell module: $module"
-                } catch {
-                    Write-Error "Failed to install PowerShell module: $_"
-                }                
+            "Scripts" {
+                foreach ($script in $Applications.$Category.Scripts) {
+                    try {
+                        Write-Host "Invoking Expression: '$script'"
+                        Invoke-Expression $script
+                    } catch {
+                        Write-Error "Failed to execute script: $_"
+                    }
+                }
             }
-        }
-        'ExternalLinks' {
-            foreach ($link in $Applications.$SubCategories.ExternalLinks) {
-                Write-Host "Opening external link: $link"
-                Start-Process $link
+            "Modules" {
+                Test-Installation -App "gsudo"
+                foreach ($module in $Applications.$Category.Modules) {
+                    try {
+                        Write-Host "Installing PowerShell module: $module"
+                        gsudo Install-Module -Name $module -Force -Scope CurrentUser -AllowClobber
+                        Import-Module -Name $module -Force -Scope CurrentUser -ErrorAction Stop
+                    } catch {
+                        Write-Error "Failed to install PowerShell module '$module': $_"
+                    }
+                }
             }
-        }
-        default {
-            Write-Error "Unknown subcategory '$SubCategories' in '$Category'."
+            "ExternalLinks" {
+                foreach ($link in $Applications.$Category.ExternalLinks) {
+                    Write-Host "Opening external link: $link"
+                    Start-Process $link
+                }
+            }
+            default {
+                Write-Error "Unknown subcategory '$SubCategory' found in '$Category'."
+            }
         }
     }
 
-    Write-Host "Installation for '$Category' completed!" -ForegroundColor Green
+    Write-Host "Installation for category '$Category' completed." -ForegroundColor Green
 }
