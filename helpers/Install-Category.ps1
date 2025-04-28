@@ -45,7 +45,7 @@ function Install-Category {
             }
             "Modules" {
                 foreach ($module in $Applications.$Category.Modules) {
-                    Install-MyModule -ModuleName $module
+                    Install-PSModule -ModuleName $module
                 }
             }
             "ExternalLinks" {

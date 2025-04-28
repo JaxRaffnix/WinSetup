@@ -1,6 +1,6 @@
 # load required modules
-. $PSScriptRoot\Install-Category.ps1
-. $PSScriptRoot\Install-WithWinget.ps1
+# . $PSScriptRoot\Install-Category.ps1
+# . $PSScriptRoot\Install-WithWinget.ps1
 
 function Initialize-Module {
     <#
