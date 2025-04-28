@@ -28,12 +28,6 @@
             "Spotify.Spotify",
             "Google.Drive",
             "JanDeDobbeleer.OhMyPosh"
-        ],
-        "Scripts": [
-            "$HOME\\scoop\\apps\\powertoys\\current\\install-context.ps1",
-            "$HOME\\scoop\\apps\\vscode\\current\\install-context.reg",
-            "$HOME\\scoop\\apps\\vscode\\current\\install-associations.reg",
-            "$HOME\\scoop\\apps\\vscode\\current\\install-github-integration.reg"
         ]
     },
     "Messengers": {
@@ -49,17 +43,13 @@
             "Inkscape.Inkscape",
             "MiKTeX.MiKTeX",
             "StrawberryPerl.StrawberryPerl",
-            "Python.Python.3",
+            "Python.Python.3.13",
             "Rufus.Rufus",
-            "PDFCPU.PDFCPU"
+            "TheMathWorksInc.MATLABRuntime",
+            "AnalogDevices.LTspice"
         ],
         "Scripts": [
-            "$HOME\\scoop\\apps\\python\\current\\install-pep-514.reg",
             "python.exe -m pip install --upgrade pip"
-        ],
-        "ExternalLinks": [
-            "https://www.mathworks.com/products/matlab.html",
-            "https://www.analog.com/en/design-center/design-tools-and-calculators/ltspice-simulator.html"
         ]
     },
     "Games": {
@@ -73,8 +63,8 @@
             "Logitech.GHUB",
             "NVIDIA.GeForceExperience",
             "RiotGames.Valorant",
-            "EpicGames.EpicGamesLauncher"
-        ],
-        "ExternalLinks": ["https://www.duckychannel.com.tw/en/support"]
+            "EpicGames.EpicGamesLauncher",
+            "9PMQSL444HLF"
+        ]
     }
 }

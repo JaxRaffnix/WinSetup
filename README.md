@@ -129,3 +129,10 @@ https://ohmyposh.dev/docs/installation/prompt
 
 add a font to posh
 https://ohmyposh.dev/docs/installation/fonts
+
+add disbale recall option
+[HKEY_CURRENT_USER\Software\Policies\Microsoft\Windows\WindowsAI]
+"DisableAIDataAnalysis"=dword:00000001
+
+python versions have to be installed explictly:
+Python.Python.3.13

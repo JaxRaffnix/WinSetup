@@ -40,7 +40,6 @@ function Install-WithWinget {
             Write-Warning "The application '$App' is already installed."
         } elseif ($Result -match "Successfully installed") {
             Write-Host "Successfully installed '$App'."
-            Out-Null
         } else {
             Write-Error "Failed to install '$App'. Output: $Result"
         }

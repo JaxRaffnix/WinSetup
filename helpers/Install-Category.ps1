@@ -44,15 +44,8 @@ function Install-Category {
                 }
             }
             "Modules" {
-                Test-Installation -App "gsudo"
                 foreach ($module in $Applications.$Category.Modules) {
-                    try {
-                        Write-Host "Installing PowerShell module: $module"
-                        gsudo Install-Module -Name $module -Force -Scope CurrentUser -AllowClobber
-                        Import-Module -Name $module -Force -Scope CurrentUser -ErrorAction Stop
-                    } catch {
-                        Write-Error "Failed to install PowerShell module '$module': $_"
-                    }
+                    Install-MyModule -ModuleName $module
                 }
             }
             "ExternalLinks" {
@@ -62,7 +55,7 @@ function Install-Category {
                 }
             }
             default {
-                Write-Error "Unknown subcategory '$SubCategory' found in '$Category'."
+                Throw "Unknown subcategory '$SubCategory' found in '$Category'."
             }
         }
     }
