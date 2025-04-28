@@ -84,9 +84,19 @@ if (-not (Test-Path $TargetPath)) {
     Throw "Target directory '$TargetPath' already exists."
 }
 
+$IgnoreFiles = @("Install.ps1", "Initialize-Module.ps1")
 # Copy all files from this folder to the user module path
 try {
     Copy-Item -Path "$ModulePath\*" -Destination $TargetPath -Recurse -Force -ErrorAction Stop
+    
+    # Exclude the specified files from being copied
+    foreach ($file in $IgnoreFiles) {
+        $filePath = Join-Path -Path $TargetPath -ChildPath $file
+        if (Test-Path $filePath) {
+            Remove-Item -Path $filePath -Force -ErrorAction Stop
+            Write-Host "Removed ignored file '$file' from target path."
+        }
+    }
 
     Write-Host "Copied Module from '$ModulePath' to '$TargetPath'."
 } catch {

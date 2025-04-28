@@ -14,13 +14,3 @@ $SourceFolder = "$ModulePath\src"
 foreach ($file in (Get-ChildItem -Path $SourceFolder -Filter '*.ps1')) {
     . $file.FullName
 }
-
-
-# Execute when the module is imported.
-try {
-    Install-Category -Category 'Initialize' -ConfigLocation "$ModulePath\config\apps.json" -ErrorAction Stop
-
-    Write-Host "Module $ModuleName imported successfully." -ForegroundColor Green
-} catch {
-    Write-Error "Failed to import module $ModuleName : $_"
-}

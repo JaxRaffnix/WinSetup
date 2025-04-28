@@ -122,6 +122,13 @@ Whatsapp is installed with ID `9NKSQGP7F2NH`, not with Meta.Whatsapp.
 
 set git aborts if user name and email already match. the other settings are ignored.
 
+Visual Studio Code
+Settings and extensions are managed via your GitHub account.
+
+KeePassXC
+Enable browser integration for Google Chrome in the settings.
+Enable lock after x seconds.
+
 ## unsure
 "M2Team.NanaZip"
 
