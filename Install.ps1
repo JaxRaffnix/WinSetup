@@ -49,7 +49,7 @@ $TargetPath = Join-Path -Path $UserModulesPath -ChildPath $ModuleName
 Write-Host "Installing module $ModuleName from '$ModulePath' to '$TargetPath'..." -ForegroundColor Cyan
 
 # Check if the module is already loaded and remove it
-if (Get-Module -Name $ModuleName -ListAvailable) {
+if (Get-Module -Name $ModuleName) {
     try {
         Remove-Module -Name $ModuleName -Force -ErrorAction Stop
 

@@ -39,7 +39,7 @@ function Set-GitConfiguration {
 
         if ($existingUserName -eq $UserName -and $existingUserEmail -eq $UserEmail) {
             Write-Warning "Git is already configured with the same user name and email. Skipping configuration."
-            return 1
+            return 
         }
 
         # Set default Git configurations

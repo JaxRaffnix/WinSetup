@@ -6,17 +6,16 @@
             "Microsoft.NuGet"
         ],
         "Scripts":[
-            "echo y |gsudo Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted"
+            "echo y | gsudo Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted"
         ]
     },
     "Core": {
         "Modules": [
             "PSScriptTools",
             "Terminal-Icons",
-            "PSReadLine "
+            "PSReadLine"
         ],
         "Winget": [
-            "M2Team.NanaZip",
             "Microsoft.VisualStudioCode",
             "Microsoft.PowerToys",
             "KeePassXCTeam.KeePassXC",
