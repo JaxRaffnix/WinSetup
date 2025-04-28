@@ -31,6 +31,8 @@ A PowerShell module designed to streamline the process of configuring Windows en
 
 ### Steps
 
+Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
+
 1. Clone the repository:
     ```powershell
     git clone https://github.com/JaxRaffnix/WinSetup.git

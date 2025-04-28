@@ -19,8 +19,8 @@ module path and imports it into the current session.
 
 # Elevate privileges
 if (-not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) {
-    Write-Warning "This script needs to be run as an administrator. Restarting with elevated privileges..."
-    Start-Process powershell.exe "-NoExit -File $PSCommandPath" -Verb RunAs
+    Write-Warning "This script needs to be run as an administrator in PowerShell 7. Restarting with elevated privileges..."
+    Start-Process pwsh.exe "-NoExit -File `"$PSCommandPath`"" -Verb RunAs
     exit
 }
 
@@ -84,7 +84,7 @@ if (-not (Test-Path $TargetPath)) {
     Throw "Target directory '$TargetPath' already exists."
 }
 
-$IgnoreFiles = @("Install.ps1", "Initialize-Module.ps1")
+$IgnoreFiles = @("Install.ps1", ".git")
 # Copy all files from this folder to the user module path
 try {
     Copy-Item -Path "$ModulePath\*" -Destination $TargetPath -Recurse -Force -ErrorAction Stop

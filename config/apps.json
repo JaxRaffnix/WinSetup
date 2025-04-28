@@ -1,13 +1,15 @@
 {
     "Initialize": {
         "Winget": [
-            "Git.Git",
-            "gerardog.gsudo",
-            "Microsoft.NuGet"
+            "gerardog.gsudo"
+        ],
+        "Modules": [
+            "NuGet",
+            "PowerShellGet"
         ],
         "Scripts":[
             "Update-Environment",
-            "echo y | Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted"
+            "Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted"
         ]
     },
     "Core": {
@@ -17,6 +19,7 @@
             "PSReadLine"
         ],
         "Winget": [
+            "Git.Git",
             "9WZDNCRD29V9",
             "Microsoft.VisualStudioCode",
             "Microsoft.PowerToys",
