@@ -36,7 +36,7 @@ function Install-Category {
             "Scripts" {
                 foreach ($script in $Applications.$Category.Scripts) {
                     try {
-                        Write-Host "Invoking Expression: '$script'"
+                        Write-Host "Invoking Expression: $script"
                         Invoke-Expression $script
                     } catch {
                         Write-Error "Failed to execute script: $_"
@@ -45,7 +45,7 @@ function Install-Category {
             }
             "Modules" {
                 foreach ($module in $Applications.$Category.Modules) {
-                    Install-MyModule -ModuleName $module
+                    Install-PSModule -ModuleName $module
                 }
             }
             "ExternalLinks" {

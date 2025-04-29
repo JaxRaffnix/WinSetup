@@ -19,8 +19,8 @@ module path and imports it into the current session.
 
 # Elevate privileges
 if (-not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) {
-    Write-Warning "This script needs to be run as an administrator. Restarting with elevated privileges..."
-    Start-Process powershell.exe "-NoExit -File $PSCommandPath" -Verb RunAs
+    Write-Warning "This script needs to be run as an administrator in PowerShell 7. Restarting with elevated privileges..."
+    Start-Process pwsh.exe "-NoExit -File `"$PSCommandPath`"" -Verb RunAs
     exit
 }
 
@@ -49,7 +49,7 @@ $TargetPath = Join-Path -Path $UserModulesPath -ChildPath $ModuleName
 Write-Host "Installing module $ModuleName from '$ModulePath' to '$TargetPath'..." -ForegroundColor Cyan
 
 # Check if the module is already loaded and remove it
-if (Get-Module -Name $ModuleName -ListAvailable) {
+if (Get-Module -Name $ModuleName) {
     try {
         Remove-Module -Name $ModuleName -Force -ErrorAction Stop
 
@@ -84,9 +84,19 @@ if (-not (Test-Path $TargetPath)) {
     Throw "Target directory '$TargetPath' already exists."
 }
 
+$IgnoreFiles = @("Install.ps1", ".git")
 # Copy all files from this folder to the user module path
 try {
     Copy-Item -Path "$ModulePath\*" -Destination $TargetPath -Recurse -Force -ErrorAction Stop
+    
+    # Exclude the specified files from being copied
+    foreach ($file in $IgnoreFiles) {
+        $filePath = Join-Path -Path $TargetPath -ChildPath $file
+        if (Test-Path $filePath) {
+            Remove-Item -Path $filePath -Force -ErrorAction Stop
+            Write-Host "Removed ignored file '$file' from target path."
+        }
+    }
 
     Write-Host "Copied Module from '$ModulePath' to '$TargetPath'."
 } catch {

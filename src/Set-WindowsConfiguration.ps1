@@ -222,6 +222,7 @@ function Set-WindowsConfiguration {
     }
 
     # Restart Windows Explorer to apply changes
+    Write-Warning "Restarting Windows Explorer to apply changes..."
     Stop-Process -Name explorer -Force
     Start-Process explorer
 

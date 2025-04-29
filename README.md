@@ -31,6 +31,8 @@ A PowerShell module designed to streamline the process of configuring Windows en
 
 ### Steps
 
+Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
+
 1. Clone the repository:
     ```powershell
     git clone https://github.com/JaxRaffnix/WinSetup.git
@@ -56,9 +58,12 @@ Run the following commands from the project root folder to set up a default conf
 # Remember evelated credentials in cache, results in less pop ups
 gsudo cache on
 
+# Configure Git
+Set-GitConfiguration -UserName 'Jax Raffnix' -UserEmail '75493600+JaxRaffnix@users.noreply.github.com'
+
 # Create user folders and shortcuts
 New-UserFolders -Folders @("Workspace", "Coding") -CreateDesktopShortcuts -PinToQuickAccess
-New-UserFolders -Folders @("Workspace\Temp")
+New-UserFolders -Folders @("Temp")
 
 # Apply system-wide configurations
 Set-WindowsConfiguration -All
@@ -67,9 +72,6 @@ Set-WallpaperAndLockScreen -WallpaperPath ".\assets\wallpaper.jpg" -LockScreenPa
 # Install applications
 Install-Applications -Core -Messengers -ProgrammingTools -Games
 Install-MSOffice -ConfigLocation ".\assets\office365.xml"
-
-# Configure Git
-Set-GitConfiguration -UserName 'Jax Raffnix' -UserEmail '75493600+JaxRaffnix@users.noreply.github.com'
 
 # Clone repositories
 Copy-Repositories -RepoUrls @(
@@ -119,6 +121,18 @@ To regenerate the module's manifest file, run:
 Winget also updates applications installed with Scoop. This results in a duplication issue, because winget runs the default app installer and doesnt touch the scoop/apps folder.
 
 Whatsapp is installed with ID `9NKSQGP7F2NH`, not with Meta.Whatsapp.
+
+set git aborts if user name and email already match. the other settings are ignored.
+
+Visual Studio Code
+Settings and extensions are managed via your GitHub account.
+
+KeePassXC
+Enable browser integration for Google Chrome in the settings.
+Enable lock after x seconds.
+
+## unsure
+"M2Team.NanaZip"
 
 ## To Do
 Add gcc complier for c with winget

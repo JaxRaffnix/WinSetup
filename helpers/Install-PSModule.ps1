@@ -1,4 +1,4 @@
-function Install-MyModule {
+function Install-PSModule {
     param (
         $ModuleName
     )

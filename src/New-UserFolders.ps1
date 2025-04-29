@@ -43,9 +43,9 @@ function New-UserFolders {
         try {
             if (-not (Test-Path $path)) {
                 New-Item -ItemType Directory -Path $path -Force | Out-Null
-                Write-Host "Created folder: $path"
+                Write-Host "Created folder: '$path'"
             } else {
-                Write-Warning "Folder already exists: $path"
+                Write-Warning "Folder already exists: '$path'"
             }
         } catch {
             Write-Error "Failed to create folder '$path': $($_.Exception.Message)"
@@ -94,10 +94,10 @@ function Add-Shortcut {
             $existingShortcut = $shell.CreateShortcut($shortcutPath)
 
             if ($existingShortcut.TargetPath -eq $TargetPath) {
-                Write-Warning "Shortcut already exists and points to the correct target: $shortcutPath"
-                return 1
+                Write-Warning "Shortcut already exists and points to the correct target: '$shortcutPath'"
+                return 
             } else {
-                Write-Warning "Shortcut exists but points to a different target. Overwriting: $shortcutPath"
+                Write-Warning "Shortcut exists but points to a different target. Overwriting: '$shortcutPath'"
             }
         }
 
@@ -106,7 +106,7 @@ function Add-Shortcut {
         $shortcut.TargetPath = $TargetPath
         $shortcut.Save()
 
-        Write-Host "Shortcut created: $shortcutPath"
+        Write-Host "Shortcut created: '$shortcutPath'"
     } catch {
         Write-Error "Failed to create shortcut for '$TargetPath': $($_.Exception.Message)"
     }
@@ -140,7 +140,7 @@ function Switch-ToQuickAccess {
             $Namespace.Self.InvokeVerb("pintohome")
             Write-Host "Folder added to Quick Access: '$FolderPath'"
         } else {
-            Write-Error "Cannot access folder: $FolderPath"
+            Write-Error "Cannot access folder: '$FolderPath'"
         }
 
     } catch {

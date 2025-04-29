@@ -25,20 +25,6 @@ function Update-Applications {
     try {
         winget upgrade --all --accept-package-agreements --accept-source-agreements --disable-interactivity --include-unknown --include-pinned --silent --force
 
-        # Get list of upgradeable packages
-        # $UpgradablePackages = winget upgrade --accept-package-agreements --accept-source-agreements | ForEach-Object {
-        #     if ($_ -match '^(.*?)\s+(.*?)\s+\S+\s+\S+\s+winget$') {
-        #         $matches[2] # Extract the package ID
-        #     }
-        # }
-
-        # # Upgrade each package explicitly
-        # foreach ($PackageId in $UpgradablePackages) {
-        #     Write-Host "Upgrading: $PackageId"
-        #     winget upgrade --id $PackageId --accept-package-agreements --accept-source-agreements --disable-interactivity --include-unknown --include-pinned --silent --force
-        # }
-
-
         Write-Host "Software update process completed successfully!" -ForegroundColor Green
     } catch {
         Write-Error "An error occurred during the update process: $_"

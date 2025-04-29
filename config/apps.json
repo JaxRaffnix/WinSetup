@@ -1,32 +1,36 @@
 {
     "Initialize": {
         "Winget": [
-            "Git.Git",
-            "gerardog.gsudo",
-            "Microsoft.NuGet"
+            "gerardog.gsudo"
+        ],
+        "Modules": [
+            "NuGet",
+            "PowerShellGet"
         ],
         "Scripts":[
-            "echo y |gsudo Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted"
+            "Update-Environment",
+            "Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted"
         ]
     },
     "Core": {
         "Modules": [
             "PSScriptTools",
             "Terminal-Icons",
-            "PSReadLine "
+            "PSReadLine"
         ],
         "Winget": [
-            "M2Team.NanaZip",
+            "Git.Git",
+            "9WZDNCRD29V9",
             "Microsoft.VisualStudioCode",
             "Microsoft.PowerToys",
             "KeePassXCTeam.KeePassXC",
-            "Restic.Restic",
+            "restic.restic",
             "Obsidian.Obsidian",
             "Google.Chrome",
             "Mathpix.MathpixSnippingTool",
             "Microsoft.WindowsTerminal",
             "Spotify.Spotify",
-            "Google.Drive",
+            "Google.GoogleDrive",
             "JanDeDobbeleer.OhMyPosh"
         ]
     },

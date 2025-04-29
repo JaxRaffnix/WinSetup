@@ -48,7 +48,7 @@ function Install-Applications {
         Throw "No categories specified. Use -Core, -Games, -Messengers, or -ProgrammingTools to specify categories."
     }
 
-    Update-Applications
+    # Update-Applications
 
     if ($Core) {
         Install-Category -Category 'Core' -ConfigLocation $ConfigLocation
