@@ -148,6 +148,8 @@ add disbale recall option
 [HKEY_CURRENT_USER\Software\Policies\Microsoft\Windows\WindowsAI]
 "DisableAIDataAnalysis"=dword:00000001
 
+run miktex update, with a terminal command
+
 python versions have to be installed explictly:
 Python.Python.3.13
 
