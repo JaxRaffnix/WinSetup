@@ -154,3 +154,7 @@ python versions have to be installed explictly:
 Python.Python.3.13
 
 add a lazy powerhsell alias that appends the last git commit with the newly added stuff without triggering a new commti,
+
+winget install --id "Blizzard.BattleNet"
+This package requires an install location
+Specify the install root: C:\Program Files (x86)
