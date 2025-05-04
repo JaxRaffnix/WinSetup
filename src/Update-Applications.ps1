@@ -18,12 +18,13 @@ function Update-Applications {
     [CmdletBinding()]
     param (
     )
+    Test-Installation -App "gsudo"
 
     Write-Host "Starting software update process..." -ForegroundColor Cyan
     Write-Warning "Please make sure common apps are closed before running this script. This includes browsers, IDE, terminals, startup apps, etc."
     
     try {
-        winget upgrade --all --accept-package-agreements --accept-source-agreements --disable-interactivity --include-unknown --include-pinned --silent --force
+        gsudo winget upgrade --all --accept-package-agreements --accept-source-agreements --disable-interactivity --include-unknown --include-pinned --silent --force
 
         Write-Host "Software update process completed successfully!" -ForegroundColor Green
     } catch {

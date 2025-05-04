@@ -1,7 +1,7 @@
-$ModuleName = "WinSetup"
+# $ModuleName = "WinSetup"
 $ModulePath = $PSScriptRoot
 
-Write-Host "Importing Module $ModuleName at '$ModulePath' ..." -ForegroundColor Cyan
+# Write-Host "Importing Module $ModuleName at '$ModulePath' ..." -ForegroundColor Cyan
 
 # load helper functions
 $HelperFolder = "$ModulePath\helpers"

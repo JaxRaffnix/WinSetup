@@ -84,7 +84,7 @@ if (-not (Test-Path $TargetPath)) {
     Throw "Target directory '$TargetPath' already exists."
 }
 
-$IgnoreFiles = @("Install.ps1", ".git")
+$IgnoreFiles = @("Install.ps1", ".git", "Initialize-Module.ps1")
 # Copy all files from this folder to the user module path
 try {
     Copy-Item -Path "$ModulePath\*" -Destination $TargetPath -Recurse -Force -ErrorAction Stop
