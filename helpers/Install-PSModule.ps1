@@ -6,8 +6,9 @@ function Install-PSModule {
     Test-Installation -App "gsudo"
 
     try {
-        gsudo Install-Module -Name $ModuleName -Force -Scope CurrentUser -AllowClobber
-        Import-Module -Name $ModuleName -Force -Scope CurrentUser -ErrorAction Stop
+        # gsudo 
+        Install-Module -Name $ModuleName -Force -Scope CurrentUser -AllowClobber
+        Import-Module -Name $ModuleName -Force -Scope Local -ErrorAction Stop
 
         Write-Host "Module '$ModuleName' installed and imported successfully."
     } catch {

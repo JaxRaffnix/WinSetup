@@ -5,7 +5,7 @@ New-ModuleManifest -Path .\WinSetup.psd1 `
     -Description 'Simplifies Windows configuration. Installs apps with winget and allow configuration of Windows settings. Additionally, GitHub Projects can be cloned, the local git account can be configured and the system can be checked for errors.' `
     -ProjectUri 'https://github.com/JaxRaffnix/WinSetup' `
     -PowerShellVersion '5.1' `
-    -ScriptsToProcess "setup/Initialize-Module.ps1" `
+    -ScriptsToProcess "core/Initialize-Module.ps1" `
     -FunctionsToExport  @(
         'Copy-Repositories'
         'Install-Applications'

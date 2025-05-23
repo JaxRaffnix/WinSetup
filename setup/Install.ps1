@@ -42,7 +42,7 @@ try {
 
 # Define Module name and paths
 $ModuleName = "WinSetup"
-$ModulePath = $PSScriptRoot # The path of the current script folder
+$ModulePath = Split-Path -Path $PSScriptRoot -Parent  # The parent folder of the current script folder (i.e., 'WinSetup')
 $UserModulesPath = Join-Path -Path $env:USERPROFILE -ChildPath "Documents\PowerShell\Modules"
 $TargetPath = Join-Path -Path $UserModulesPath -ChildPath $ModuleName
 
@@ -53,9 +53,9 @@ if (Get-Module -Name $ModuleName) {
     try {
         Remove-Module -Name $ModuleName -Force -ErrorAction Stop
 
-        Write-Host "Removed loaded module $ModuleName from the current session."
+        Write-Host "Removed loaded module $ModuleName with older version from the current session."
     } catch {
-        Write-Error "Failed to remove loaded module $ModuleName : $_"
+        Write-Error "Failed to remove loaded module $ModuleName with older version : $_"
     }
 }
 
@@ -64,9 +64,9 @@ if (Test-Path $TargetPath) {
     try {
         Remove-Item -Path $TargetPath -Recurse -Force -ErrorAction Stop
         
-        Write-Host "Removed existing module files at: '$TargetPath'."
+        Write-Host "Removed existing module files with older version at: '$TargetPath'."
     } catch {
-        Write-Error "Failed to remove existing module: $_"
+        Write-Error "Failed to remove existing module with older version: $_"
     }
 }
 
@@ -84,21 +84,20 @@ if (-not (Test-Path $TargetPath)) {
     Throw "Target directory '$TargetPath' already exists."
 }
 
-$IgnoreFiles = @("Install.ps1", ".git", "Initialize-Module.ps1", "setup")
+$IgnoreFiles = @(".git", "setup", "core/Generate-Manifest.ps1")
 # Copy all files from this folder to the user module path
 try {
     Copy-Item -Path "$ModulePath\*" -Destination $TargetPath -Recurse -Force -ErrorAction Stop
+    Write-Host "Copied Module from '$ModulePath' to '$TargetPath'."
     
     # Exclude the specified files from being copied
     foreach ($file in $IgnoreFiles) {
         $filePath = Join-Path -Path $TargetPath -ChildPath $file
         if (Test-Path $filePath) {
-            Remove-Item -Path $filePath -Force -ErrorAction Stop
+            Remove-Item -Path $filePath -Force -ErrorAction Stop -Recurse
             Write-Host "Removed ignored file '$file' from target path."
         }
     }
-
-    Write-Host "Copied Module from '$ModulePath' to '$TargetPath'."
 } catch {
     Write-Error "Failed to copy module files: $_"
 }
