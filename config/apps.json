@@ -31,7 +31,8 @@
             "Microsoft.WindowsTerminal",
             "Spotify.Spotify",
             "Google.GoogleDrive",
-            "JanDeDobbeleer.OhMyPosh"
+            "JanDeDobbeleer.OhMyPosh",
+            "JAMSoftware.TreeSize.Free"
         ]
     },
     "Messengers": {

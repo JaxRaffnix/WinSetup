@@ -13,7 +13,9 @@ A PowerShell module designed to streamline the process of configuring Windows en
     - [Prerequisites](#prerequisites)
     - [Steps](#steps)
     - [Manual Configurations](#manual-configurations)
-  - [Available Commands](#available-commands)
+  - [Usage](#usage)
+    - [Available Commands](#available-commands)
+    - [Imported Functions](#imported-functions)
   - [Development](#development)
     - [Updating the Manifest](#updating-the-manifest)
     - [Known Issues](#known-issues)
@@ -76,7 +78,9 @@ config\DefaultSetup.ps1
 - **KeepassXC:** Enable browser integration for Google Chrome in the settings. Enable lock after x seconds. Set Auto Type Shortcut to `CTRL+ALT+A`.
 - **MikTeX:** Check for upgrades.
 
-## Available Commands
+## Usage 
+
+### Available Commands
 
 | Command                      | Description                                                                                   | Example Usage                                 |
 |------------------------------|-----------------------------------------------------------------------------------------------|-----------------------------------------------|
@@ -94,6 +98,11 @@ config\DefaultSetup.ps1
 
 > [!NOTE] 
 > Use `Get-Help <Command>` in PowerShell for detailed usage and parameter information.
+
+### Imported Functions
+- PSScriptTools, eg. Show-Tree -InColor -ShowItem
+- Terminal-Icons, Get-ChildItem -Path . -Force
+- PSReadLine, `CTRL+SPACE` for auto complete
 
 ## Development
 
