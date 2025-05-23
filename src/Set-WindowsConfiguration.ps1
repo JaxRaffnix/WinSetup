@@ -244,7 +244,7 @@ function Set-WallpaperAndLockScreen {
     The file path to the image to be used as the lock screen image.
 
     .EXAMPLE
-    Set-WallpaperAndLockScreen -WallpaperPath "C:\Images\wallpaper.jpg" -LockScreenPath "C:\Images\lockscreen.jpg"
+    Set-WallpaperAndLockScreen -WallpaperPath "$HOME\Images\wallpaper.jpg" -LockScreenPath "$HOME\Images\lockscreen.jpg"
     #>
 
     [CmdletBinding()]

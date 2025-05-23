@@ -83,7 +83,7 @@ function Install-MSOffice {
         The full path to the Office Deployment Tool configuration XML file. The file must exist.
 
     .EXAMPLE
-        Install-MSOffice -ConfigLocation "C:\Configs\OfficeConfig.xml"
+        Install-MSOffice -ConfigLocation "$HOME\OfficeConfig.xml"
 
         Installs Microsoft Office using the configuration specified in OfficeConfig.xml.
 

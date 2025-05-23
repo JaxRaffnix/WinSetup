@@ -63,6 +63,7 @@ function Set-GitConfiguration {
 }
 
 function Git-Amend {
+    
     param (
         [string]$message = "Updated commit"
     )

@@ -14,7 +14,7 @@ function Copy-Repositories {
     The folder where the repositories should be cloned.
 
     .EXAMPLE
-    Clone-GitRepos -RepoUrls @("https://github.com/user/repo1.git", "https://github.com/user/repo2.git") -TargetFolder "C:\Projects"
+    Copy-Repositories -RepoUrls @("https://github.com/user/repo1.git", "https://github.com/user/repo2.git") -TargetFolder "C:\Projects"
     #>
 
     [CmdletBinding()]

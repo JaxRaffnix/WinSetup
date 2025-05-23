@@ -2,16 +2,23 @@
 
 # WinSetup - Windows Configuration Helper
 
-A PowerShell module designed to streamline the process of configuring Windows environments. With **WinSetup**, you can automate tasks such as creating user folders, setting up Git, and installing software using **Scoop** and **Winget**.
+A PowerShell module designed to streamline the process of configuring Windows environments. With **WinSetup**, tasks such as creating user folders, setting up Git, and installing software using **Winget** are automated.
 
 ## Table of Contents
 
-1. [Features](#features)
-2. [Installation](#installation)
-3. [Usage](#usage)
-4. [Configuration](#configuration)
-5. [Development](#development)
-6. [To Do](#to-do)
+- [WinSetup - Windows Configuration Helper](#winsetup---windows-configuration-helper)
+  - [Table of Contents](#table-of-contents)
+  - [Features](#features)
+  - [Installation](#installation)
+    - [Prerequisites](#prerequisites)
+    - [Steps](#steps)
+    - [Manual Configurations](#manual-configurations)
+  - [Available Commands](#available-commands)
+  - [Development](#development)
+    - [Updating the Manifest](#updating-the-manifest)
+    - [Known Issues](#known-issues)
+    - [Unsure to Include](#unsure-to-include)
+    - [To Do](#to-do)
 
 ## Features
 
@@ -45,10 +52,10 @@ Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
 git clone https://github.com/JaxRaffnix/WinSetup.git
 ```
 
-3. Navigate to the repository folder:
+3. Navigate to the setup folder:
 
 ```powershell
-cd WinSetup
+cd WinSetup/setup
 ```
 
 4. Install the module:
@@ -57,59 +64,36 @@ cd WinSetup
 .\install.ps1
 ```
 
-5. Run the Installation in a Powershell console:
-This is an example how a configuration could look like.
+5. Configure your machine with custom setup parameters (optionally change configuration details)
 
 ```powershell
-# Remember evelated credentials in cache, results in less pop ups
-gsudo cache on
-
-# Configure Git
-Set-GitConfiguration -UserName 'Jax Raffnix' -UserEmail '75493600+JaxRaffnix@users.noreply.github.com'
-
-# Create user folders and shortcuts
-New-UserFolders -Folders @("Workspace", "Coding") -CreateDesktopShortcuts -PinToQuickAccess
-New-UserFolders -Folders @("Temp")
-
-# Apply system-wide configurations
-Set-WindowsConfiguration -All
-Set-WallpaperAndLockScreen -WallpaperPath ".\assets\wallpaper.jpg" -LockScreenPath ".\assets\wallpaper.jpg"
-
-# Install applications
-Install-Applications -Core -Messengers -ProgrammingTools -Games
-Install-MSOffice -ConfigLocation ".\assets\office365.xml"
-
-# Clone repositories
-Copy-Repositories -RepoUrls @(
-     "https://github.com/JaxRaffnix/Hilfestellung.git",
-     "https://github.com/JaxRaffnix/Backup-Manager.git",
-     "https://github.com/JaxRaffnix/WinSetup.git"
-) -TargetFolder "$HOME\Coding"
-
-# Test system integrity
-Test-SystemIntegrity -All
+config\DefaultSetup.ps1
 ```
 
 ### Manual Configurations
 
 - **Visual Studio Code:** Settings and extensions are managed via your GitHub account.
-- **KeepassXC:** Enable browser integration for Google Chrome in the settings. Enable lock after x seconds. Set Auto Type Shortcut to `CTRl+ALT+A`
-- **MikTeX:** Check for Upgrades,
+- **KeepassXC:** Enable browser integration for Google Chrome in the settings. Enable lock after x seconds. Set Auto Type Shortcut to `CTRL+ALT+A`.
+- **MikTeX:** Check for upgrades.
 
 ## Available Commands
 
-- ga: an Alias than ammends the latest git commit with all current changes
-- Copy-Repositories
-- Install-Applications
-- Install-MSOffice
-- Set-Posh
-- New-UserFolders
-- Switch-ToQuickAccess
-- Set-GitConfiguration
-- Set-WindowsConfiguration
-- Set-WallpaperAndLockScreen
-- Test-SystemIntegrity
-- Update-Applications
+| Command                      | Description                                                                                   | Example Usage                                 |
+|------------------------------|-----------------------------------------------------------------------------------------------|-----------------------------------------------|
+| `ga`                         | Alias for amending the latest Git commit with all current changes.                            | `ga`                                          |
+| `Copy-Repositories`          | Clones a list of repositories to a specified target folder.                                   | `Copy-Repositories -RepoUrls @("https://github.com/user/repo1.git", "https://github.com/user/repo2.git") -TargetFolder "$HOME\Projects"`  |
+| `Install-Applications`       | Installs a predefined list of applications using Winget.                                      | `Install-Applications -All`                        |
+| `Install-MSOffice`           | Installs Microsoft Office suite using the appropriate installer.                              | `Install-MSOffice -ConfigLocation "$HOME\OfficeConfig.xml"`                            |
+| `Set-Posh`                   | Installs and configures Oh My Posh for PowerShell prompt customization.                       | `Set-Posh -FontName "MesloLGM Nerd Font"`                                    |
+| `New-UserFolders`            | Creates common user folders (e.g., Temp, Coding, Workspace) in the user's profile directory.  | `New-UserFolders -Folders @("Workspace", "Coding") -CreateDesktopShortcuts -PinToQuickAccess`                             |
+| `Set-GitConfiguration`       | Configures Git user name, email, and other settings for the current user.                     | `Set-GitConfiguration -UserName "Alice" -UserEmail "alice@example.com"` |
+| `Set-WindowsConfiguration`   | Applies system settings such as explorer preferences and privacy options.                      | `Set-WindowsConfiguration -All`                    |
+| `Set-WallpaperAndLockScreen` | Sets the desktop wallpaper and lock screen image.                                             | `Set-WallpaperAndLockScreen -WallpaperPath "$HOME\Images\wallpaper.jpg" -LockScreenPath "$HOME\Images\lockscreen.jpg"`        |
+| `Test-SystemIntegrity`       | Runs checks to verify system health and configuration integrity.                              | `Test-SystemIntegrity -All`                        |
+| `Update-Applications`        | Updates installed applications via Winget.                                                    | `Update-Applications`                         |
+
+> [!NOTE] 
+> Use `Get-Help <Command>` in PowerShell for detailed usage and parameter information.
 
 ## Development
 
@@ -123,11 +107,11 @@ To regenerate the module's manifest file, run:
 
 ### Known Issues
 
-- `Set-GitConfiguration` aborts if user name and email already match. the other settings are ignored.
-- Some App IDs are strings and not with a descriptive name. E.g. `9NKSQGP7F2NH` for whatsapp.
-- python versions have to be installed explictly: `Python.Python.3.13`
+- `Set-GitConfiguration` aborts if user name and email already match. The other settings are ignored.
+- Some App IDs are strings, not a descriptive name. E.g. `9NKSQGP7F2NH` for WhatsApp.
+- Python versions have to be installed explicitly: `Python.Python.3.13`
 - BattleNet requires an install location. Specify the install root: `C:\Program Files (x86)`.
-- C Compiler is part of Strawberry
+- No explicit C compiler is necessary, it is already part of Strawberry.
 
 ### Unsure to Include
 
