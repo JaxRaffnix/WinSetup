@@ -50,7 +50,8 @@
             "Python.Python.3.13",
             "Rufus.Rufus",
             "TheMathWorksInc.MATLABRuntime",
-            "AnalogDevices.LTspice"
+            "AnalogDevices.LTspice",
+            "MSYS2.MSYS2"
         ],
         "Scripts": [
             "python.exe -m pip install --upgrade pip"

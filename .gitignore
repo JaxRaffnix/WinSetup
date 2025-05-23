@@ -1,11 +1,2 @@
-# PowerShell module build artifacts
-
-
-
-
 # VSCode settings
 .vscode/
-
-# Logs
-*.log
-

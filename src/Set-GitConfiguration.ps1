@@ -61,3 +61,12 @@ function Set-GitConfiguration {
         Write-Error "An error occurred while configuring Git: $_"
     }
 }
+
+function Git-Amend {
+    param (
+        [string]$message = "Updated commit"
+    )
+    git add .
+    git commit --amend -m "$message"
+}
+Set-Alias ga Git-Amend

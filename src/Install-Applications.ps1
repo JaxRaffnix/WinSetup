@@ -71,6 +71,26 @@ function Install-Applications {
 
 
 function Install-MSOffice {
+    <#
+    .SYNOPSIS
+        Installs Microsoft Office using the Office Deployment Tool and a specified configuration file.
+
+    .DESCRIPTION
+        This function installs Microsoft Office by first ensuring the Office Deployment Tool is installed via winget.
+        It then runs the setup executable with the provided configuration XML file to perform a customized Office installation.
+
+    .PARAMETER ConfigLocation
+        The full path to the Office Deployment Tool configuration XML file. The file must exist.
+
+    .EXAMPLE
+        Install-MSOffice -ConfigLocation "C:\Configs\OfficeConfig.xml"
+
+        Installs Microsoft Office using the configuration specified in OfficeConfig.xml.
+
+    .NOTES
+        Requires administrative privileges and the Office Deployment Tool to be available via winget.
+    #>
+
 
     [CmdletBinding()]
     param(
@@ -84,7 +104,8 @@ function Install-MSOffice {
     }
 
     Install-WithWinget Microsoft.OfficeDeploymentTool
-    Set-Location "C:\Program Files\OfficeDeploymentTool";  .\setup.exe /configure "$ConfigLocation"
+    Set-Location "C:\Program Files\OfficeDeploymentTool"
+    .\setup.exe /configure "$ConfigLocation"
     
     Write-Host "MS Office installation completed." -ForegroundColor Green
 }
