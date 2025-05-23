@@ -1,3 +1,5 @@
+<!-- LTeX: language=en-US -->
+
 # WinSetup - Windows Configuration Helper
 
 A PowerShell module designed to streamline the process of configuring Windows environments. With **WinSetup**, you can automate tasks such as creating user folders, setting up Git, and installing software using **Scoop** and **Winget**.
@@ -13,11 +15,11 @@ A PowerShell module designed to streamline the process of configuring Windows en
 
 ## Features
 
-- **User Folder Management**: Automatically creates common user folders (e.g., `Documents`, `Projects`, `Workspace`).
+- **User Folder Management**: Automatically creates common user folders (e.g., `Temp`, `Coding`, `Workspace`).
 - **Quick Access Integration**: Adds folders to Quick Access and creates desktop shortcuts.
 - **System Customization**: Configures wallpapers, explorer settings, and other system settings.
 - **Git Configuration**: Sets up a local Git account with user details.
-- **Software Installation**: Installs applications using **Scoop** and **Winget**.
+- **Software Installation**: Installs applications using **Winget**.
 - **Repository Management**: Clones repositories to a specified target folder.
 - **System Integrity Testing**: Verifies system health and configuration.
 
@@ -31,28 +33,32 @@ A PowerShell module designed to streamline the process of configuring Windows en
 
 ### Steps
 
+1. Allow the execution of script files:
+
+```powershell
 Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
+```
 
-1. Clone the repository:
-    ```powershell
-    git clone https://github.com/JaxRaffnix/WinSetup.git
-    ```
+2. Clone the repository:
 
-2. Navigate to the repository folder:
-    ```powershell
-    cd WinSetup
-    ```
+```powershell
+git clone https://github.com/JaxRaffnix/WinSetup.git
+```
 
-3. Run the installation script:
-    ```powershell
-    .\install.ps1
-    ```
+3. Navigate to the repository folder:
 
-## Usage
+```powershell
+cd WinSetup
+```
 
-### Default Configuration
+4. Install the module:
 
-Run the following commands from the project root folder to set up a default configuration:
+```powershell
+.\install.ps1
+```
+
+5. Run the Installation in a Powershell console:
+This is an example how a configuration could look like.
 
 ```powershell
 # Remember evelated credentials in cache, results in less pop ups
@@ -78,83 +84,56 @@ Copy-Repositories -RepoUrls @(
      "https://github.com/JaxRaffnix/Hilfestellung.git",
      "https://github.com/JaxRaffnix/Backup-Manager.git",
      "https://github.com/JaxRaffnix/WinSetup.git"
-) -TargetFolder "C:\Users\Jax\Coding"
+) -TargetFolder "$HOME\Coding"
 
 # Test system integrity
 Test-SystemIntegrity -All
 ```
 
+### Manual Configurations
 
-## Configuration
+- **Visual Studio Code:** Settings and extensions are managed via your GitHub account.
+- **KeepassXC:** Enable browser integration for Google Chrome in the settings. Enable lock after x seconds. Set Auto Type Shortcut to `CTRl+ALT+A`
+- **MikTeX:** Check for Upgrades,
 
-### Customizing User Folders
+## Available Commands
 
-You can specify custom folders to create:
-```powershell
-New-UserFolders -Folders @("CustomFolder1", "CustomFolder2") -CreateShortcuts -PinToQuickAccess
-```
-
-### Git Configuration
-
-Set up Git with your preferred username and email:
-```powershell
-Set-GitConfiguration -UserName 'Your Name' -UserEmail 'your.email@example.com'
-```
-
-### Application Installation
-
-Install specific applications:
-```powershell
-Install-Applications -Apps @("7zip", "notepadplusplus", "vscode")
-```
+- Copy-Repositories
+- Install-Applications
+- Install-MSOffice
+- New-UserFolders
+- Switch-ToQuickAccess
+- Set-GitConfiguration
+- Set-WindowsConfiguration
+- Set-WallpaperAndLockScreen
+- Test-SystemIntegrity
+- Update-Applications
 
 ## Development
 
 ### Updating the Manifest
 
 To regenerate the module's manifest file, run:
+
 ```powershell
 .\Generate-Manifest.ps1
 ```
 
-## Known Issues
-Winget also updates applications installed with Scoop. This results in a duplication issue, because winget runs the default app installer and doesnt touch the scoop/apps folder.
+### Known Issues
 
-Whatsapp is installed with ID `9NKSQGP7F2NH`, not with Meta.Whatsapp.
+- `Set-GitConfiguration` aborts if user name and email already match. the other settings are ignored.
+- Some App IDs are strings and not with a descriptive name. E.g. `9NKSQGP7F2NH` for whatsapp.
+- python versions have to be installed explictly: `Python.Python.3.13`
+- BattleNet requires an install location. Specify the install root: `C:\Program Files (x86)`.
+- C Compiler is part of Strawberry
 
-set git aborts if user name and email already match. the other settings are ignored.
+### Unsure to Include
 
-Visual Studio Code
-Settings and extensions are managed via your GitHub account.
+- M2Team.NanaZip
+- Zoom.Zoom
 
-KeePassXC
-Enable browser integration for Google Chrome in the settings.
-Enable lock after x seconds.
+### To Do
 
-## unsure
-"M2Team.NanaZip"
-
-## To Do
-Add gcc complier for c with winget
-
-
-add the following steps to enable posh terminal
-https://ohmyposh.dev/docs/installation/prompt
-
-add a font to posh
-https://ohmyposh.dev/docs/installation/fonts
-
-add disbale recall option
-[HKEY_CURRENT_USER\Software\Policies\Microsoft\Windows\WindowsAI]
-"DisableAIDataAnalysis"=dword:00000001
-
-run miktex update, with a terminal command
-
-python versions have to be installed explictly:
-Python.Python.3.13
-
-add a lazy powerhsell alias that appends the last git commit with the newly added stuff without triggering a new commti,
-
-winget install --id "Blizzard.BattleNet"
-This package requires an install location
-Specify the install root: C:\Program Files (x86)
+- add the following steps to enable posh terminal <https://ohmyposh.dev/docs/installation/prompt>
+- add a font to posh <https://ohmyposh.dev/docs/installation/fonts>
+- add a lazy powerhsell alias that appends the last git commit with the newly added stuff without triggering a new commti,

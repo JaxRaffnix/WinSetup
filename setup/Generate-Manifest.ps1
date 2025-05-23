@@ -11,7 +11,6 @@ New-ModuleManifest -Path .\WinSetup.psd1 `
         'Install-Applications'
         'Install-MSOffice'
         'New-UserFolders'
-        'Switch-ToQuickAccess'
         'Set-GitConfiguration'
         'Set-WindowsConfiguration'
         'Set-WallpaperAndLockScreen'
