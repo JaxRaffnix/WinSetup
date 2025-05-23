@@ -63,11 +63,25 @@ function Set-GitConfiguration {
 }
 
 function Git-Amend {
-    
+    <#
+    .SYNOPSIS
+    Amend the last Git commit with staged changes and a new message.
+
+    .DESCRIPTION
+    Stages all changes and amends the previous commit with the provided commit message.
+
+    .PARAMETER Message
+    The new commit message for the amended commit. Defaults to "Updated commit".
+
+    .EXAMPLE
+    Git-Amend -Message "Fix typo in README"
+    #>
+    [CmdletBinding()]
     param (
-        [string]$message = "Updated commit"
+        [string]$Message = "Updated commit"
     )
     git add .
-    git commit --amend -m "$message"
+    git commit --amend -m "$Message"
 }
-Set-Alias ga Git-Amend
+
+Set-Alias -Name ga -Value Git-Amend

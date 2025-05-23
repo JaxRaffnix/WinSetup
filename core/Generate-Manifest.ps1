@@ -13,6 +13,7 @@ New-ModuleManifest -Path .\WinSetup.psd1 `
         'Set-Posh'
         'New-UserFolders'
         'Set-GitConfiguration'
+        'Git-Amend'
         'Set-WindowsConfiguration'
         'Set-WallpaperAndLockScreen'
         'Test-SystemIntegrity'
