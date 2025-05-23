@@ -10,6 +10,7 @@ New-ModuleManifest -Path .\WinSetup.psd1 `
         'Copy-Repositories'
         'Install-Applications'
         'Install-MSOffice'
+        'Set-Posh'
         'New-UserFolders'
         'Set-GitConfiguration'
         'Set-WindowsConfiguration'

@@ -98,9 +98,11 @@ Test-SystemIntegrity -All
 
 ## Available Commands
 
+- ga: an Alias than ammends the latest git commit with all current changes
 - Copy-Repositories
 - Install-Applications
 - Install-MSOffice
+- Set-Posh
 - New-UserFolders
 - Switch-ToQuickAccess
 - Set-GitConfiguration
@@ -134,5 +136,4 @@ To regenerate the module's manifest file, run:
 
 ### To Do
 
-- add the following steps to enable posh terminal <https://ohmyposh.dev/docs/installation/prompt>
-- add a font to posh <https://ohmyposh.dev/docs/installation/fonts>
+-
