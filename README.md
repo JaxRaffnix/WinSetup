@@ -131,4 +131,4 @@ To regenerate the module's manifest file, run:
 
 ### To Do
 
--
+- Taskbar Pinned Apps: C:\Users\Jax\AppData\Roaming\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar
