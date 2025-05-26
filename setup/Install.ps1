@@ -18,11 +18,11 @@ module path and imports it into the current session.
 #>
 
 # Elevate privileges
-if (-not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) {
-    Write-Warning "This script needs to be run as an administrator in PowerShell 7. Restarting with elevated privileges..."
-    Start-Process pwsh.exe "-NoExit -File `"$PSCommandPath`"" -Verb RunAs
-    exit
-}
+# if (-not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) {
+#     Write-Warning "This script needs to be run as an administrator in PowerShell 7. Restarting with elevated privileges..."
+#     Start-Process pwsh.exe "-NoExit -File `"$PSCommandPath`"" -Verb RunAs
+#     exit
+# }
 
 # Fix untrusted script execution
 $RequiredPolicy = "RemoteSigned"
@@ -40,13 +40,32 @@ try {
     Write-Error "Failed to set execution policy: $_"
 }
 
+# Ensure PowerShell version is 5.1
+if ($PSVersionTable.PSVersion.Major -ne 5 -or $PSVersionTable.PSVersion.Minor -ne 1) {
+    Throw "This script requires PowerShell 5.1. Current version: $($PSVersionTable.PSVersion)"
+}
+
 # Define Module name and paths
-$ModuleName = "WinSetup"
-$ModulePath = Split-Path -Path $PSScriptRoot -Parent  # The parent folder of the current script folder (i.e., 'WinSetup')
-$UserModulesPath = Join-Path -Path $env:USERPROFILE -ChildPath "Documents\PowerShell\Modules"
+$ModuleName = Split-Path (Split-Path $PSScriptRoot -Parent) -Leaf
+$ModulePath = Split-Path -Path $PSScriptRoot -Parent  
+$UserModulesPath = Join-Path -Path $env:USERPROFILE -ChildPath "Documents\WindowsPowerShell\Modules"
 $TargetPath = Join-Path -Path $UserModulesPath -ChildPath $ModuleName
 
 Write-Host "Installing module $ModuleName from '$ModulePath' to '$TargetPath'..." -ForegroundColor Cyan
+
+# Run Generate-Manifest.ps1 if it exists
+$ManifestScript = Join-Path -Path $ModulePath -ChildPath "core\Generate-Manifest.ps1"
+if (Test-Path $ManifestScript) {
+    Write-Host "Running Generate-Manifest.ps1..." -ForegroundColor Yellow
+    try {
+        & $ManifestScript
+        Write-Host "Generate-Manifest.ps1 completed successfully." -ForegroundColor Green
+    } catch {
+        Write-Error "Failed to run Generate-Manifest.ps1: $_"
+    }
+} else {
+    Write-Host "Generate-Manifest.ps1 not found. Skipping manifest generation." -ForegroundColor DarkYellow
+}
 
 # Check if the module is already loaded and remove it
 if (Get-Module -Name $ModuleName) {
@@ -70,42 +89,46 @@ if (Test-Path $TargetPath) {
     }
 }
 
-# Create target path if it doesn't exist
-if (-not (Test-Path $TargetPath)) {
-    try {
-        New-Item -ItemType Directory -Path $TargetPath -Force | Out-Null
-
-        Write-Host "Created target directory '$TargetPath'."
-    } catch {
-        Write-Error "Failed to create target directory: $_"
-    }
-} else {
-    # this should never happen, because we removed it above
-    Throw "Target directory '$TargetPath' already exists."
-}
+# Create the target directory after removal
+New-Item -ItemType Directory -Path $TargetPath -Force | Out-Null
 
 $IgnoreFiles = @(".git", ".gitignore", "setup", "core/Generate-Manifest.ps1")
-# Copy all files from this folder to the user module path
-try {
-    Copy-Item -Path "$ModulePath\*" -Destination $TargetPath -Recurse -Force -ErrorAction Stop
-    Write-Host "Copied Module from '$ModulePath' to '$TargetPath'."
-    
-    # Exclude the specified files from being copied
-    foreach ($file in $IgnoreFiles) {
-        $filePath = Join-Path -Path $TargetPath -ChildPath $file
-        if (Test-Path $filePath) {
-            Remove-Item -Path $filePath -Force -ErrorAction Stop -Recurse
-            Write-Host "Removed ignored file '$file' from target path."
+
+$ItemsToCopy = Get-ChildItem -Path $ModulePath -Recurse -Force | Where-Object {
+    $relativePath = $_.FullName.Substring($ModulePath.Length + 1)
+    foreach ($ignore in $IgnoreFiles) {
+        if ($relativePath -like "$ignore*") {
+            return $false
         }
     }
-} catch {
-    Write-Error "Failed to copy module files: $_"
+    return $true
 }
+
+foreach ($item in $ItemsToCopy) {
+    $relativePath = $item.FullName.Substring($ModulePath.Length + 1)
+    $target = Join-Path $TargetPath $relativePath
+
+    if ($item.PSIsContainer) {
+        # Create the folder if it's a directory
+        New-Item -ItemType Directory -Path $target -Force | Out-Null
+    } else {
+        # Ensure the destination folder exists
+        $destinationFolder = Split-Path $target -Parent
+        if (-not (Test-Path $destinationFolder)) {
+            New-Item -ItemType Directory -Path $destinationFolder -Force | Out-Null
+        }
+
+        # Now copy the file
+        Copy-Item -Path $item.FullName -Destination $target -Force
+    }
+}
+
 
 # Import the module
 try {
-    $env:PSModulePath += ";$UserModulesPath"  # Update the environment variable to include the new module path
-    Import-Module $ModuleName -Force -ErrorAction Stop
+    # $env:PSModulePath += ";$UserModulesPath"  # Update the environment variable to include the new module path
+    # Import-Module $ModuleName -Force -ErrorAction Stop
+    Import-Module $TargetPath -Force -ErrorAction Stop
 
     Write-Host "Module $ModuleName installed successfully." -ForegroundColor Green
 } catch {

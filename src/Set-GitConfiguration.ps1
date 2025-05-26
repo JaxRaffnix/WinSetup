@@ -84,4 +84,5 @@ function Git-Amend {
     git commit --amend -m "$Message"
 }
 
-Set-Alias -Name ga -Value Git-Amend
+Set-Alias -Name ga -Value Git-Amend 
+Export-ModuleMember -Alias \* -Function \*

@@ -78,6 +78,7 @@ config\DefaultSetup.ps1
 - **Visual Studio Code:** Settings and extensions are managed via your GitHub account.
 - **KeepassXC:** Enable browser integration for Google Chrome in the settings. Enable lock after x seconds. Set Auto Type Shortcut to `CTRL+ALT+A`.
 - **MikTeX:** Check for upgrades.
+- **Thunderbird:** Include Adress Book and Calender from `jan.hoegen.akathebozz@gmail.com`
 
 ## Usage
 

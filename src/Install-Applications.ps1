@@ -164,7 +164,7 @@ function Set-Posh {
         $json = Get-Content $settingsPath -Raw | ConvertFrom-Json
         if ($null -eq $json.profiles) { $json | Add-Member -MemberType NoteProperty -Name profiles -Value @{} }
         if ($null -eq $json.profiles.defaults) { $json.profiles | Add-Member -MemberType NoteProperty -Name defaults -Value @{} }
-        $json.profiles.defaults.font = $json.profiles.defaults.font ?? @{}
+        $json.profiles.defaults.font = $json.profiles.defaults.font
         $json.profiles.defaults.font.face = $fontName
         $json | ConvertTo-Json -Depth 10 | Set-Content $settingsPath -Encoding UTF8
         Write-Host "Windows Terminal font updated to $fontName!"
