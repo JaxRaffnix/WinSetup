@@ -46,7 +46,7 @@ try {
 }
 
 # Ensure PowerShell version is 5.1
-if ($PSVersionTable.PSVersion.Major -ne 5 -or $PSVersionTable.PSVersion.Minor -ne 1) {
+if ($PSVersionTable.PSVersion.Major -ne 5) {
     Throw "This script requires PowerShell 5.1. Current version: $($PSVersionTable.PSVersion)"
 }
 

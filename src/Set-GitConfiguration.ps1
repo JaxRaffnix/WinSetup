@@ -85,4 +85,3 @@ function Git-Amend {
 }
 
 Set-Alias -Name ga -Value Git-Amend 
-Export-ModuleMember -Alias \* -Function \*
