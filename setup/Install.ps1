@@ -23,6 +23,11 @@ module path and imports it into the current session.
 #     Start-Process pwsh.exe "-NoExit -File `"$PSCommandPath`"" -Verb RunAs
 #     exit
 # }
+# if (-not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) {
+#     Write-Warning "This script needs to be run as an administrator in PowerShell 7. Restarting with elevated privileges..."
+#     Start-Process pwsh.exe "-NoExit -File `"$PSCommandPath`"" -Verb RunAs
+#     exit
+# }
 
 # Fix untrusted script execution
 $RequiredPolicy = "RemoteSigned"
@@ -67,6 +72,20 @@ if (Test-Path $ManifestScript) {
     Write-Host "Generate-Manifest.ps1 not found. Skipping manifest generation." -ForegroundColor DarkYellow
 }
 
+# Run Generate-Manifest.ps1 if it exists
+$ManifestScript = Join-Path -Path $ModulePath -ChildPath "core\Generate-Manifest.ps1"
+if (Test-Path $ManifestScript) {
+    Write-Host "Running Generate-Manifest.ps1..." -ForegroundColor Yellow
+    try {
+        & $ManifestScript
+        Write-Host "Generate-Manifest.ps1 completed successfully." -ForegroundColor Green
+    } catch {
+        Write-Error "Failed to run Generate-Manifest.ps1: $_"
+    }
+} else {
+    Write-Host "Generate-Manifest.ps1 not found. Skipping manifest generation." -ForegroundColor DarkYellow
+}
+
 # Check if the module is already loaded and remove it
 if (Get-Module -Name $ModuleName) {
     try {
@@ -89,6 +108,8 @@ if (Test-Path $TargetPath) {
     }
 }
 
+# Create the target directory after removal
+New-Item -ItemType Directory -Path $TargetPath -Force | Out-Null
 # Create the target directory after removal
 New-Item -ItemType Directory -Path $TargetPath -Force | Out-Null
 
@@ -124,8 +145,41 @@ foreach ($item in $ItemsToCopy) {
 }
 
 
+$ItemsToCopy = Get-ChildItem -Path $ModulePath -Recurse -Force | Where-Object {
+    $relativePath = $_.FullName.Substring($ModulePath.Length + 1)
+    foreach ($ignore in $IgnoreFiles) {
+        if ($relativePath -like "$ignore*") {
+            return $false
+        }
+    }
+    return $true
+}
+
+foreach ($item in $ItemsToCopy) {
+    $relativePath = $item.FullName.Substring($ModulePath.Length + 1)
+    $target = Join-Path $TargetPath $relativePath
+
+    if ($item.PSIsContainer) {
+        # Create the folder if it's a directory
+        New-Item -ItemType Directory -Path $target -Force | Out-Null
+    } else {
+        # Ensure the destination folder exists
+        $destinationFolder = Split-Path $target -Parent
+        if (-not (Test-Path $destinationFolder)) {
+            New-Item -ItemType Directory -Path $destinationFolder -Force | Out-Null
+        }
+
+        # Now copy the file
+        Copy-Item -Path $item.FullName -Destination $target -Force
+    }
+}
+
+
 # Import the module
 try {
+    # $env:PSModulePath += ";$UserModulesPath"  # Update the environment variable to include the new module path
+    # Import-Module $ModuleName -Force -ErrorAction Stop
+    Import-Module $TargetPath -Force -ErrorAction Stop
     # $env:PSModulePath += ";$UserModulesPath"  # Update the environment variable to include the new module path
     # Import-Module $ModuleName -Force -ErrorAction Stop
     Import-Module $TargetPath -Force -ErrorAction Stop
