@@ -15,17 +15,4 @@ foreach ($file in (Get-ChildItem -Path $SourceFolder -Filter '*.ps1')) {
     . $file.FullName
 }
 
-# TODO: This should not be necessary. There is a strange error when importing this module.
-# TODO: The initialize script has been temporarily disabled.
-Export-ModuleMember -Function `
-    Copy-Repositories,
-    Install-Applications,
-    Install-MSOffice,
-    Set-Posh,
-    New-UserFolders,
-    Set-GitConfiguration,
-    Git-Amend,
-    Set-WindowsConfiguration,
-    Set-WallpaperAndLockScreen,
-    Test-SystemIntegrity,
-    Update-Applications
+# !: The initialize script has been temporarily disabled.

@@ -18,4 +18,5 @@ New-ModuleManifest -Path .\WinSetup.psd1 `
         'Set-WallpaperAndLockScreen'
         'Test-SystemIntegrity'
         'Update-Applications'
-    )
+    ) `
+    -AliasesToExport @('ga')
