@@ -16,7 +16,7 @@ function Update-Applications {
     Write-Host "Starting software update process..." -ForegroundColor Cyan
     Write-Warning "Please make sure common apps are closed before running this script. This includes browsers, IDE, terminals, startup apps, etc."
 
-    $OldShortCuts = Get-ChildItem "$env:USERPROFILE\Desktop" -Filter "*.lnk"
+    $OldShortCuts = Get-ChildItem "$env:USERPROFILE\Desktop" -Filter "*.lnk" | Select-Object -ExpandProperty Name
     
     try {
         gsudo winget upgrade --all --accept-package-agreements --accept-source-agreements --disable-interactivity --include-unknown --include-pinned --silent --force
@@ -33,13 +33,17 @@ function Remove-AppShortcuts {
 
     [CmdletBinding()]
     param (
-        [Mandatory()]
+        [Parameter(Mandatory)]
         $OldShortCuts
     )
 
-    $FilePath = "$env:USERPROFILE\Desktop"
-
     Write-Host "Removing unwanted shortcuts at '$FilePath'" -ForegroundColor Cyan
+
+    $FilePath = "$env:USERPROFILE\Desktop"
+    
+    if (-not (Test-Path $FilePath)) {
+        Throw "The path '$FilePath' does not exist."
+    }
 
     $CurrentShortCuts = Get-ChildItem $FilePath -Filter "*.lnk"
 
