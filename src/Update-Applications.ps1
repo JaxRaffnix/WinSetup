@@ -37,7 +37,11 @@ function Remove-AppShortcuts {
         $OldShortCuts
     )
 
-    $CurrentShortCuts = Get-ChildItem "$env:USERPROFILE\Desktop" -Filter "*.lnk"
+    $FilePath = "$env:USERPROFILE\Desktop"
+
+    Write-Host "Removing unwanted shortcuts at '$FilePath'" -ForegroundColor Cyan
+
+    $CurrentShortCuts = Get-ChildItem $FilePath -Filter "*.lnk"
 
     foreach ($ShortCut in $CurrentShortCuts) {
         if ($OldShortCuts -notcontains $ShortCut.Name) {
@@ -51,4 +55,6 @@ function Remove-AppShortcuts {
             Write-Host "Keeping shortcut: $($ShortCut.Name)"
         }
     }
+
+    Write-Host "Successfully removed unwanted shortcuts." -ForegroundColor Green
 }

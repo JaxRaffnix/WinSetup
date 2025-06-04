@@ -62,7 +62,7 @@ function Set-GitConfiguration {
     }
 }
 
-function Git-Amend {
+function Invoke-GitAmend {
     <#
     .SYNOPSIS
     Amend the last Git commit with staged changes and a new message.
@@ -74,7 +74,7 @@ function Git-Amend {
     The new commit message for the amended commit. Defaults to "Updated commit".
 
     .EXAMPLE
-    Git-Amend -Message "Fix typo in README"
+    Invoke-GitAmend -Message "Fix typo in README"
     #>
     [CmdletBinding()]
     param (
@@ -84,4 +84,4 @@ function Git-Amend {
     git commit --amend -m "$Message"
 }
 
-Set-Alias -Name ga -Value Git-Amend 
+Set-Alias -Name ga -Value Invoke-GitAmend 

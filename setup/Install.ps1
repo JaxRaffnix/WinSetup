@@ -61,7 +61,7 @@ Write-Host "Installing module $ModuleName from '$ModulePath' to '$TargetPath'...
 # Run Generate-Manifest.ps1 if it exists
 $ManifestScript = Join-Path -Path $ModulePath -ChildPath "core\Generate-Manifest.ps1"
 if (Test-Path $ManifestScript) {
-    Write-Host "Running Generate-Manifest.ps1..." -ForegroundColor Yellow
+    Write-Host "Running Generate-Manifest.ps1..." -ForegroundColor Cyan
     try {
         & $ManifestScript
         Write-Host "Generate-Manifest.ps1 completed successfully." -ForegroundColor Green
@@ -69,21 +69,7 @@ if (Test-Path $ManifestScript) {
         Write-Error "Failed to run Generate-Manifest.ps1: $_"
     }
 } else {
-    Write-Host "Generate-Manifest.ps1 not found. Skipping manifest generation." -ForegroundColor DarkYellow
-}
-
-# Run Generate-Manifest.ps1 if it exists
-$ManifestScript = Join-Path -Path $ModulePath -ChildPath "core\Generate-Manifest.ps1"
-if (Test-Path $ManifestScript) {
-    Write-Host "Running Generate-Manifest.ps1..." -ForegroundColor Yellow
-    try {
-        & $ManifestScript
-        Write-Host "Generate-Manifest.ps1 completed successfully." -ForegroundColor Green
-    } catch {
-        Write-Error "Failed to run Generate-Manifest.ps1: $_"
-    }
-} else {
-    Write-Host "Generate-Manifest.ps1 not found. Skipping manifest generation." -ForegroundColor DarkYellow
+    Write-Warning "Generate-Manifest.ps1 not found. Skipping manifest generation."
 }
 
 # Check if the module is already loaded and remove it
