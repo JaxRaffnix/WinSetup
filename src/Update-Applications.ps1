@@ -33,7 +33,7 @@ function Remove-AppShortcuts {
 
     [CmdletBinding()]
     param (
-        [Parameter(Mandatory)]
+        [Parameter(Mandatory = $true)]
         $OldShortCuts
     )
 
