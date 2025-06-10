@@ -37,9 +37,9 @@ function Remove-AppShortcuts {
         $OldShortCuts
     )
 
-    Write-Host "Removing unwanted shortcuts at '$FilePath'" -ForegroundColor Cyan
-
     $FilePath = "$env:USERPROFILE\Desktop"
+
+    Write-Host "Removing unwanted shortcuts at '$FilePath'" -ForegroundColor Cyan
     
     if (-not (Test-Path $FilePath)) {
         Throw "The path '$FilePath' does not exist."
