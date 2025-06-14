@@ -30,33 +30,38 @@ function Update-Applications {
 }
 
 function Remove-AppShortcuts {
-
     [CmdletBinding()]
     param (
         [Parameter(Mandatory = $true)]
         $OldShortCuts
     )
 
-    $FilePath = "$env:USERPROFILE\Desktop"
+    $UserDesktopPath = "$env:USERPROFILE\Desktop"
+    $PublicDesktopPath = "C:\Users\Public\Desktop"
 
-    Write-Host "Removing unwanted shortcuts at '$FilePath'" -ForegroundColor Cyan
-    
-    if (-not (Test-Path $FilePath)) {
-        Throw "The path '$FilePath' does not exist."
-    }
+    $DesktopPaths = @($UserDesktopPath, $PublicDesktopPath)
 
-    $CurrentShortCuts = Get-ChildItem $FilePath -Filter "*.lnk"
+    foreach ($FilePath in $DesktopPaths) {
+        Write-Host "Removing unwanted shortcuts at '$FilePath'" -ForegroundColor Cyan
 
-    foreach ($ShortCut in $CurrentShortCuts) {
-        if ($OldShortCuts -notcontains $ShortCut.Name) {
-            try {
-                Remove-Item $ShortCut.FullName -Force
-                Write-Warning "Removed newly added shortcut: $($ShortCut.Name)"
-            } catch {
-                Throw "Failed to remove shortcut: $($ShortCut.Name). Error: $_"
+        if (-not (Test-Path $FilePath)) {
+            Write-Warning "The path '$FilePath' does not exist. Skipping..."
+            continue
+        }
+
+        $CurrentShortCuts = Get-ChildItem $FilePath -Filter "*.lnk"
+
+        foreach ($ShortCut in $CurrentShortCuts) {
+            if ($OldShortCuts -notcontains $ShortCut.Name) {
+                try {
+                    Remove-Item $ShortCut.FullName -Force
+                    Write-Warning "Removed newly added shortcut: $($ShortCut.Name)"
+                } catch {
+                    Write-Error "Failed to remove shortcut: $($ShortCut.Name). Error: $_"
+                }
+            } else {
+                Write-Host "Keeping shortcut: $($ShortCut.Name)"
             }
-        } else {
-            Write-Host "Keeping shortcut: $($ShortCut.Name)"
         }
     }
 
