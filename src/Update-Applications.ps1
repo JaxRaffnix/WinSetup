@@ -67,3 +67,15 @@ function Remove-AppShortcuts {
 
     Write-Host "Successfully removed unwanted shortcuts." -ForegroundColor Green
 }
+
+
+# temporary test
+
+# $OldShortCuts = Get-ChildItem "$env:USERPROFILE\Desktop" -Filter "*.lnk" | Select-Object -ExpandProperty Name
+
+# Write-Host "Old Shortcuts: "
+# Write-Host $OldShortCuts
+
+# Copy-Item "C:\Users\Jax\Temp\Epic Games Launcher.lnk" -Destination "C:\Users\Public\Desktop"
+
+# Remove-AppShortcuts -OldShortCuts $OldShortCuts
