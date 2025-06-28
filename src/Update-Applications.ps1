@@ -54,7 +54,7 @@ function Remove-AppShortcuts {
         foreach ($ShortCut in $CurrentShortCuts) {
             if ($OldShortCuts -notcontains $ShortCut.Name) {
                 try {
-                    Remove-Item $ShortCut.FullName -Force
+                    gsudo Remove-Item $ShortCut.FullName -Force
                     Write-Warning "Removed newly added shortcut: $($ShortCut.Name)"
                 } catch {
                     Write-Error "Failed to remove shortcut: $($ShortCut.Name). Error: $_"
