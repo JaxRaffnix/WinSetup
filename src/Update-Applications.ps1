@@ -17,9 +17,12 @@ function Update-Applications {
     Write-Warning "Please make sure common apps are closed before running this script. This includes browsers, IDE, terminals, startup apps, etc."
 
     $OldShortCuts = Get-ChildItem "$env:USERPROFILE\Desktop" -Filter "*.lnk" | Select-Object -ExpandProperty Name
+
+    gsudo cache on
     
     try {
-        Get-InstalledModule | Update-Module
+        Write-Host "Updating installed PowerShell modules."
+        gsudo Update-Module
 
         gsudo winget upgrade --all --accept-package-agreements --accept-source-agreements --disable-interactivity --include-unknown --include-pinned --silent --force --uninstall-previous 
 
