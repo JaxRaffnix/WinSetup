@@ -5,7 +5,8 @@
         ],
         "Modules": [
             "NuGet",
-            "PowerShellGet"
+            "PowerShellGet",
+            "PSWritePDF"
         ],
         "Scripts":[
             "Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted"

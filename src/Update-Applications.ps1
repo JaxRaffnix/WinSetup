@@ -19,6 +19,8 @@ function Update-Applications {
     $OldShortCuts = Get-ChildItem "$env:USERPROFILE\Desktop" -Filter "*.lnk" | Select-Object -ExpandProperty Name
     
     try {
+        Get-InstalledModule | Update-Module
+
         gsudo winget upgrade --all --accept-package-agreements --accept-source-agreements --disable-interactivity --include-unknown --include-pinned --silent --force --uninstall-previous 
 
         Remove-AppShortcuts -OldShortCuts $OldShortCuts
