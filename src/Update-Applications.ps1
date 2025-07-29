@@ -24,7 +24,8 @@ function Update-Applications {
         Write-Host "Updating installed PowerShell modules."
         gsudo Update-Module
 
-        gsudo winget upgrade --all --accept-package-agreements --accept-source-agreements --disable-interactivity --include-unknown --include-pinned --silent --force --uninstall-previous 
+        gsudo winget upgrade --all --accept-package-agreements --accept-source-agreements --disable-interactivity --include-unknown --include-pinned --silent --force 
+        # --uninstall-previous # probably a bad idea
 
         Remove-AppShortcuts -OldShortCuts $OldShortCuts
 
