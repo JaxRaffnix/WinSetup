@@ -58,6 +58,9 @@ function Test-SystemIntegrity {
 
     # Ensure required tools are installed
     Test-Installation -App 'gsudo'
+    gsudo cache on
+
+    Install-PSModule "PSWindowsUpdate"
 
     Write-Host "Starting system integrity checks..." -ForegroundColor Cyan
 
@@ -69,16 +72,18 @@ function Test-SystemIntegrity {
             @{ Title = "Windows Defender Summary"; Command = { Get-MpComputerStatus | Select-Object AMServiceEnabled, RealTimeProtectionEnabled, AntivirusEnabled, NISProtectionEnabled | Format-List | Out-String } },
             @{ Title = "System Reliability Issues (Last 7 Days)"; Command = { Get-WinEvent -FilterHashtable @{LogName="System"; StartTime=(Get-Date).AddDays(-7)} | Where-Object {$_.LevelDisplayName -eq "Error"} | Format-Table TimeCreated, Message | Out-String } },
             @{ Title = "Startup Programs"; Command = { Get-CimInstance Win32_StartupCommand | Select-Object Name, Command, Location | Format-Table | Out-String } },
-            @{ Title = "DISM ScanHealth"; Command = { DISM /Online /Cleanup-Image /RestoreHealth } },
+            @{ Title = "DISM ScanHealth"; Command = { gsudo DISM /Online /Cleanup-Image /RestoreHealth } },
             @{ Title = "System File Checker (SFC)"; Command = { gsudo sfc /scannow } },
-            @{ Title = "CHKDSK with Fix"; Command = { Write-Output Y | gsudo chkdsk C: /f /r /x } }
+            @{ Title = "CHKDSK with Fix"; Command = { Write-Output Y | gsudo chkdsk C: /f /r /x } },
+            @{ Title = "Pending Windows Updates"; Command = { gsudo Get-WindowsUpdate -AcceptAll -IgnoreReboot | Format-Table | Out-String } }
         )
     }
 
     if ($StorageHealth) {
         $commands += @(
             @{ Title = "Physical Disk Health"; Command = { Get-PhysicalDisk | Select-Object DeviceID, MediaType, HealthStatus, OperationalStatus | Format-Table | Out-String } },
-            @{ Title = "Disk Usage Analysis"; Command = { Get-PSDrive -PSProvider FileSystem | Select-Object Name, Used, Free, @{Name="Used(%)"; Expression={[math]::Round(($_.Used / ($_.Used + $_.Free)) * 100, 2)}} | Format-Table | Out-String } }
+            @{ Title = "Disk Usage Analysis"; Command = { Get-PSDrive -PSProvider FileSystem | Select-Object Name, Used, Free, @{Name="Used(%)"; Expression={[math]::Round(($_.Used / ($_.Used + $_.Free)) * 100, 2)}} | Format-Table | Out-String } },
+            @{ Title = "Check for Large Files (>500MB) on C:"; Command = { Get-ChildItem -Path C:\ -Recurse -ErrorAction SilentlyContinue | Where-Object { -not $_.PSIsContainer -and $_.Length -gt 500MB } | Select-Object FullName, Length | Sort-Object Length -Descending | Format-Table | Out-String } }
         )
     }
 
@@ -106,7 +111,7 @@ function Test-SystemIntegrity {
         Write-Host "Executing: $($cmd.Command)" -ForegroundColor DarkCyan
         
         try {
-            $cmd.Command
+            & $cmd.Command
         } catch {
             Write-Error "$($cmd.Title) failed: $_"
         }
