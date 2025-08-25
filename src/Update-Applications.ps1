@@ -25,7 +25,7 @@ function Update-Applications {
         gsudo Update-Module
 
         gsudo winget upgrade --all --accept-package-agreements --accept-source-agreements --disable-interactivity --include-unknown --include-pinned --silent --force 
-        # --uninstall-previous # probably a bad idea
+        # --uninstall-previous # ! unintalling old version can have negative consequences. e.g. when updating game launcher, installed games will be deleted.
 
         Remove-AppShortcuts -OldShortCuts $OldShortCuts
 
