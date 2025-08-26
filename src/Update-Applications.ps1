@@ -57,6 +57,8 @@ function Remove-AppShortcuts {
 
         $CurrentShortCuts = Get-ChildItem $FilePath -Filter "*.lnk"
 
+        gsudo cache on
+
         foreach ($ShortCut in $CurrentShortCuts) {
             if ($OldShortCuts -notcontains $ShortCut.Name) {
                 try {
