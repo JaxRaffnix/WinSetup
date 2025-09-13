@@ -10,6 +10,23 @@ function Update-Applications {
         Ensure that Winget is installed and properly configured on your system before running this script.
         Administrator privileges are called with 'gsudo'.
     #>
+
+    param (
+        $UpdateWindows = $true
+        $UpdatePSModules = $true
+        $UpdateApps = $true
+        $UPdateNVidiaDriver = $true
+        $All = $true
+    )
+
+    if ($All) {
+        $UpdateWindows = $true
+        $UpdatePSModules = $true
+        $UpdateApps = $true
+        $UPdateNVidiaDriver = $true
+    }
+
+    # TODO: add parameter to function
     
     Test-Installation -App "gsudo"
 
@@ -22,12 +39,22 @@ function Update-Applications {
     
     try {
         Write-Host "Updating installed PowerShell modules."
-        gsudo Update-Module
+        gsudo Update-Module -AcceptLicense
 
+        Write-Host "Updating installed apps with winget..." -ForegroundColor Cyan
         gsudo winget upgrade --all --accept-package-agreements --accept-source-agreements --disable-interactivity --include-unknown --include-pinned --silent --force 
         # --uninstall-previous # ! unintalling old version can have negative consequences. e.g. when updating game launcher, installed games will be deleted.
+        Write-Host "Successfully updated applications with winget." -ForegroundColor Green
 
         Remove-AppShortcuts -OldShortCuts $OldShortCuts
+
+        Write-Host "Running Windows Update" -ForegroundColor Cyan
+        gsudo Get-WindowsUpdate -Download -Install -AcceptAll
+        Write-Host "Successfully updated Windows." -ForegroundColor Green
+
+        if ((Get-WURebootStatus).RebootRequired) {
+            Write-Warning "A system reboot is required to complete the updates. Please save your work and restart your computer."
+        }
 
         Write-Host "Software update process completed successfully!" -ForegroundColor Green
     } catch {

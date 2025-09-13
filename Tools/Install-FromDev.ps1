@@ -168,7 +168,7 @@ try {
     Import-Module $TargetPath -Force -ErrorAction Stop
     # $env:PSModulePath += ";$UserModulesPath"  # Update the environment variable to include the new module path
     # Import-Module $ModuleName -Force -ErrorAction Stop
-    Import-Module $TargetPath -Force -ErrorAction Stop
+    # Import-Module $TargetPath -Force -ErrorAction Stop
 
     Write-Host "Module $ModuleName installed successfully." -ForegroundColor Green
 } catch {
