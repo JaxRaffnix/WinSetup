@@ -127,7 +127,6 @@ To regenerate the module's manifest file, run:
 
 ### Unsure to Include
 
-- M2Team.NanaZip
 - Zoom.Zoom
 - ebook reader aquile: 9P08T4JLTQNK 
 

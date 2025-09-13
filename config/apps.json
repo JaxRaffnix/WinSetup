@@ -5,9 +5,7 @@
         ],
         "Modules": [
             "NuGet",
-            "PowerShellGet",
-            "PSWritePDF",
-            "PSWindowsUpdate"
+            "PowerShellGet"
         ],
         "Scripts":[
             "Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted"
@@ -17,9 +15,12 @@
         "Modules": [
             "PSScriptTools",
             "Terminal-Icons",
-            "PSReadLine"
+            "PSReadLine",
+            "PSWindowsUpdate",
+            "PSWritePDF"
         ],
         "Winget": [
+            "M2Team.NanaZip",
             "Git.Git",
             "9WZDNCRD29V9",
             "Microsoft.VisualStudioCode",

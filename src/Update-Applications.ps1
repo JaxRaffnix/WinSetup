@@ -12,10 +12,10 @@ function Update-Applications {
     #>
 
     param (
-        $UpdateWindows = $true
-        $UpdatePSModules = $true
-        $UpdateApps = $true
-        $UPdateNVidiaDriver = $true
+        $UpdateWindows = $true,
+        $UpdatePSModules = $true,
+        $UpdateApps = $true,
+        $UPdateNVidiaDriver = $true,
         $All = $true
     )
 
