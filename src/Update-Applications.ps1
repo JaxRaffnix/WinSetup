@@ -39,7 +39,7 @@ function Update-Applications {
     
     try {
         Write-Host "Updating installed PowerShell modules."
-        gsudo Update-Module -AcceptLicense
+        gsudo Update-Module
 
         Write-Host "Updating installed apps with winget..." -ForegroundColor Cyan
         gsudo winget upgrade --all --accept-package-agreements --accept-source-agreements --disable-interactivity --include-unknown --include-pinned --silent --force 
