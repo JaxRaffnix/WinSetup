@@ -1,18 +1,9 @@
-# $ModuleName = "WinSetup"
-$ModulePath = $PSScriptRoot
-
-# Write-Host "Importing Module $ModuleName at '$ModulePath' ..." -ForegroundColor Cyan
-
-# load helper functions
-$HelperFolder = "$ModulePath\helpers"
-foreach ($file in (Get-ChildItem -Path $HelperFolder -Filter '*.ps1')) {
-    . $file.FullName
+# Import all private helpers
+Get-ChildItem -Path "$PSScriptRoot\Private\*.ps1" -Recurse | ForEach-Object {
+     . $_.FullName
 }
 
-# Load all function scripts
-$SourceFolder = "$ModulePath\src"
-foreach ($file in (Get-ChildItem -Path $SourceFolder -Filter '*.ps1')) {
-    . $file.FullName
+# Import all public functions
+Get-ChildItem -Path "$PSScriptRoot\Public\*.ps1" -Recurse | ForEach-Object {
+     . $_.FullName
 }
-
-# !: The initialize script has been temporarily disabled.

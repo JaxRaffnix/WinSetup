@@ -1,0 +1,8 @@
+{
+    "ModuleVersion": "1.0.0",
+    "Author": "Jan Hoegen",
+    "Description": "A PowerShell module designed to streamline the process of configuring Windows environments.",
+    "ProjectUri": "https://github.com/JaxRaffnix/WinSetup",
+    "PowerShellVersion": "5.1",
+    "IgnoreFiles": [".git", ".vscode", "WinSetup.json", "self-installer.ps1" ]
+}
