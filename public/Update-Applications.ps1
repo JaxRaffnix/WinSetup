@@ -52,12 +52,13 @@ function Update-Applications {
         gsudo Get-WindowsUpdate -Download -Install -AcceptAll
         Write-Host "Successfully updated Windows." -ForegroundColor Green
 
-        if ((Get-WURebootStatus).RebootRequired) {
+        if ((gsudo Get-WURebootStatus).RebootRequired) {
             Write-Warning "A system reboot is required to complete the updates. Please save your work and restart your computer."
         }
 
         Write-Host "Software update process completed successfully!" -ForegroundColor Green
-    } catch {
+    } 
+    catch {
         Write-Error "An error occurred during the update process: $_"
     }
 }
